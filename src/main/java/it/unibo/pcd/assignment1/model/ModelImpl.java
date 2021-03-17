@@ -26,17 +26,21 @@ public class ModelImpl implements Model {
 
     @Override
     public void startCalculation(final Path filesDirectory, final Path stopwordsFile, final int wordsNumber) throws IOException {
+        //TODO: join?
         this.workers.clear();
         this.counter = Optional.of(new WordCounterImpl(wordsNumber));
-        final List<Path> files = Files.list(filesDirectory).collect(Collectors.toList());
+        final List<Path> files = Files.list(filesDirectory)
+                                      .filter(p -> p.toString().matches(".*pdf$"))
+                                      .collect(Collectors.toList());
         final List<String> stopwords = Files.readAllLines(stopwordsFile);
-        for (final List<Path> partition : files.stream()
-                                               .collect(Collectors.groupingBy(p -> files.indexOf(p) % MAX_NUM_WORKERS))
-                                               .values()) {
-            final Worker worker = WorkerFactory.create(partition, stopwords, this.counter.get());
-            this.workers.add(worker);
-            worker.start();
-        }
+        files.stream()
+             .collect(Collectors.groupingBy(p -> files.indexOf(p) % MAX_NUM_WORKERS))
+             .values()
+             .forEach(l -> {
+                 final Worker worker = WorkerFactory.create(l, stopwords, this.counter.get());
+                 this.workers.add(worker);
+                 worker.start();
+             });
     }
 
     @Override

@@ -31,7 +31,7 @@ public class GUIController implements Controller {
                     try {
                         Thread.sleep(17); //TODO: do better...
                     } catch (final InterruptedException ignored) {}
-                } while(!this.model.isCalculationCompleted());
+                } while (!this.model.isCalculationCompleted());
                 final Update update = this.model.getUpdate();
                 this.view.update(update.getFrequencies(), update.getProcessedWords());
             }).start();
