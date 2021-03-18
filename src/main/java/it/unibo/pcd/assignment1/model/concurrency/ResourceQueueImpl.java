@@ -5,10 +5,11 @@ import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
-public class ResourceQueueImpl<X> implements ResourceQueue<X>{
-    private final Queue<X> queue;
+public class ResourceQueueImpl<E> implements ResourceQueue<E> {
+
     private final Lock lock;
     private final Condition notEmptyCondition;
+    protected final Queue<E> queue;
 
     public ResourceQueueImpl(){
         this.queue = new LinkedList<>();
@@ -16,28 +17,20 @@ public class ResourceQueueImpl<X> implements ResourceQueue<X>{
         this.notEmptyCondition = this.lock.newCondition();
     }
     @Override
-    public void add(X data) {
+    public void enqueue(final E value) {
         try{
             this.lock.lock();
-            queue.add(Objects.requireNonNull(data));
-            if(this.isEmpty()){
-                this.notEmptyCondition.notifyAll();
-            }
+            this.doEnqueue(Objects.requireNonNull(value));
         }finally {
             this.lock.unlock();
         }
     }
 
     @Override
-    public Optional<X> pop() {
+    public Optional<E> dequeue() {
         try{
             this.lock.lock();
-            while (this.isEmpty()){
-                try {
-                    this.notEmptyCondition.await();
-                }catch (InterruptedException e){} //TODO empty catch
-            }
-            return Optional.of(this.queue.poll());
+            return this.doDequeue();
         }finally {
             this.lock.unlock();
         }
@@ -45,5 +38,24 @@ public class ResourceQueueImpl<X> implements ResourceQueue<X>{
 
     protected boolean isEmpty(){
         return this.queue.size() == 0;
+    }
+
+    protected Optional<E> doDequeue() {
+        while (this.isEmpty()){
+            try {
+                this.notEmptyCondition.await();
+            }catch (InterruptedException e){} //TODO empty catch
+        }
+        if(this.queue.isEmpty()){
+            throw new IllegalStateException();
+        }
+        return Optional.of(this.queue.poll());
+    }
+
+    protected void doEnqueue(E value) {
+        this.queue.add(value);
+        if(this.isEmpty()){
+            this.notEmptyCondition.notifyAll();
+        }
     }
 }

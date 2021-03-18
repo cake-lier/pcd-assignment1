@@ -2,8 +2,9 @@ package it.unibo.pcd.assignment1.model.concurrency;
 
 import java.util.Optional;
 
-public interface ResourceQueue<X> {
+public interface ResourceQueue<E> {
 
-    void add(X data);
-    Optional<X> pop();
+    void enqueue(E value);
+
+    Optional<E> dequeue();
 }
