@@ -2,22 +2,22 @@ package it.unibo.pcd.assignment1.model.update;
 
 import java.util.*;
 
-class UpdateImpl implements Update {
-    private final Map<String, Integer> frequencies;
-    private final int processedWords;
+public class UpdateImpl implements Update {
+    private final Map<String, Long> frequencies;
+    private final long processedWords;
 
-    protected UpdateImpl(final Map<String, Integer> frequencies, final int processedWords) {
+    public UpdateImpl(final Map<String, Long> frequencies, final long processedWords) {
         this.frequencies = Collections.unmodifiableMap(new LinkedHashMap<>(frequencies));
         this.processedWords = processedWords;
     }
 
     @Override
-    public Map<String, Integer> getFrequencies() {
+    public Map<String, Long> getFrequencies() {
         return this.frequencies;
     }
 
     @Override
-    public int getProcessedWords() {
+    public long getProcessedWords() {
         return this.processedWords;
     }
 

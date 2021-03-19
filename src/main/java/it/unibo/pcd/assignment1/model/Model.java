@@ -4,6 +4,7 @@ import it.unibo.pcd.assignment1.model.update.Update;
 
 import java.io.IOException;
 import java.nio.file.Path;
+import java.util.Optional;
 
 public interface Model {
     void startCalculation(final Path filesDirectory, final Path stopwordsFile, final int wordsNumber) throws IOException;
@@ -12,9 +13,5 @@ public interface Model {
 
     void resumeCalculation();
 
-    boolean isCalculationCompleted();
-
-    void awaitResult();
-
-    Update getUpdate();
+    Optional<Update> getLatestUpdate();
 }

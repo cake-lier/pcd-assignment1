@@ -26,14 +26,14 @@ public class GUIController implements Controller {
             this.model.startCalculation(filesDirectory, stopwordsFile, wordsNumber);
             new Thread(() -> {
                 do {
-                    final Update update = this.model.getUpdate();
-                    this.view.update(update.getFrequencies(), update.getProcessedWords());
+                    final Update update = this.model.getLatestUpdate();
+                    this.view.displayProgress(update.getFrequencies(), update.getProcessedWords());
                     try {
                         Thread.sleep(17); //TODO: do better...
                     } catch (final InterruptedException ignored) {}
                 } while (!this.model.isCalculationCompleted());
-                final Update update = this.model.getUpdate();
-                this.view.update(update.getFrequencies(), update.getProcessedWords());
+                final Update update = this.model.getLatestUpdate();
+                this.view.displayProgress(update.getFrequencies(), update.getProcessedWords());
             }).start();
         } catch (final IOException ex) {
             ex.printStackTrace();

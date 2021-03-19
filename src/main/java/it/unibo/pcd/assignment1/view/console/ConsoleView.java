@@ -40,10 +40,15 @@ public class ConsoleView implements View {
     }
 
     @Override
-    public void update(final Map<String, Integer> frequencies, final int processedWords) {
+    public void displayProgress(final Map<String, Long> frequencies, final long processedWords) {
         System.out.printf(FREQUENCIES_TITLE, frequencies.size());
         frequencies.forEach((w, f) -> System.out.printf(FREQUENCIES_LINE, w, f));
         System.out.printf(PROCESSED_WORDS_TITLE, processedWords);
+    }
+
+    @Override
+    public void displayCompletion() {
+        //TODO: fix view
     }
 
     @Override

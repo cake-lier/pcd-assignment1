@@ -10,6 +10,7 @@ import it.unibo.pcd.assignment1.view.console.ConsoleView;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.List;
+import java.util.Optional;
 
 public class ConsoleController implements Controller {
     private final Model model;
@@ -25,9 +26,14 @@ public class ConsoleController implements Controller {
     public void launch(final Path filesDirectory, final Path stopwordsFile, final int wordsNumber) {
         try {
             this.model.startCalculation(filesDirectory, stopwordsFile, wordsNumber);
-            this.model.awaitResult();
-            final Update result = this.model.getUpdate();
-            this.view.update(result.getFrequencies(), result.getProcessedWords());
+            do {
+                final Optional<Update> update = this.model.getLatestUpdate();
+                if (!update.isPresent()) {
+                    break;
+                }
+                this.view.displayProgress(update.get().getFrequencies(), update.get().getProcessedWords());
+            } while (true);
+            this.view.displayCompletion();
         } catch (final IOException ex) {
             this.view.displayError(ex.getMessage());
         }

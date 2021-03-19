@@ -5,7 +5,9 @@ import java.util.Map;
 public interface View {
     void show();
 
-    void update(Map<String, Integer> frequencies, int processedWords);
+    void displayProgress(Map<String, Long> frequencies, long processedWords);
+
+    void displayCompletion();
 
     void displayError(String message);
 }

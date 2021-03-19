@@ -42,7 +42,7 @@ public class GUIView implements View {
     private Optional<Path> filesDirectoryPath;
     private Optional<Path> stopwordsFilePath;
     @FXML
-    private BarChart<String, Integer> barChart;
+    private BarChart<String, Long> barChart;
     @FXML
     private Label filesDirectoryLabel;
     @FXML
@@ -94,7 +94,8 @@ public class GUIView implements View {
                     }
                 });
                 this.suspendButton.setOnMouseClicked(e -> {
-                    //TODO: what to do here?
+                    //TODO: switch to resume behavior
+                    this.controller.suspend();
                 });
                 this.resetButton.setOnMouseClicked(e -> {
                     this.barChart.getData().clear();
@@ -119,10 +120,10 @@ public class GUIView implements View {
     }
 
     @Override
-    public void update(final Map<String, Integer> frequencies, final int processedWords) {
+    public void displayProgress(final Map<String, Long> frequencies, final long processedWords) {
         Platform.runLater(() -> {
-            final ObservableList<XYChart.Series<String, Integer>> data = this.barChart.getData();
-            final XYChart.Series<String, Integer> series = new XYChart.Series<>();
+            final ObservableList<XYChart.Series<String, Long>> data = this.barChart.getData();
+            final XYChart.Series<String, Long> series = new XYChart.Series<>();
             frequencies.entrySet()
                        .stream()
                        .map(e -> new XYChart.Data<>(e.getKey(), e.getValue()))
@@ -131,6 +132,12 @@ public class GUIView implements View {
             data.add(series);
             this.processedWordsLabel.setText(String.format(PROCESSED_WORDS_LABEL_MSG, processedWords));
         });
+    }
+
+    @Override
+    public void displayCompletion() {
+        this.suspendButton.setDisable(true);
+        this.resetButton.setDisable(false);
     }
 
     @Override

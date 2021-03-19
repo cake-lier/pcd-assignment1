@@ -11,8 +11,8 @@ public class ResourceQueueImpl<E> implements ResourceQueue<E> {
     private final Condition notEmptyCondition;
     protected final Queue<E> queue;
 
-    public ResourceQueueImpl(){
-        this.queue = new LinkedList<>();
+    public ResourceQueueImpl(final Collection<E> initialElements){
+        this.queue = new LinkedList<>(initialElements);
         this.lock = new ReentrantLock();
         this.notEmptyCondition = this.lock.newCondition();
     }
