@@ -1,9 +1,9 @@
 package it.unibo.pcd.assignment1.model.worker;
 
 import it.unibo.pcd.assignment1.model.Page;
-import it.unibo.pcd.assignment1.model.WordCounter;
-import it.unibo.pcd.assignment1.model.concurrency.CloseableResourceQueue;
-import it.unibo.pcd.assignment1.model.concurrency.ResourceQueue;
+import it.unibo.pcd.assignment1.model.WordCounterImpl;
+import it.unibo.pcd.assignment1.model.concurrency.FilterPipe;
+import it.unibo.pcd.assignment1.model.concurrency.GeneratorPipe;
 import it.unibo.pcd.assignment1.model.update.UpdateImpl;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.text.PDFTextStripper;
@@ -17,17 +17,17 @@ import java.util.stream.Collectors;
 class WorkerImpl extends Thread implements Worker {
     public static final String CANNOT_EXTRACT_TEXT = "You do not have permission to extract text";
 
-    private final ResourceQueue<Path> documentQueue;
-    private final CloseableResourceQueue<Page> pageQueue;
+    private final GeneratorPipe<Path> documentQueue;
+    private final FilterPipe<Page> pageQueue;
     private final Set<String> stopwords;
     private final SharedWorkerState state;
-    private final WordCounter counter;
+    private final WordCounterImpl counter;
 
-    protected WorkerImpl(final ResourceQueue<Path> documentQueue,
-                         final CloseableResourceQueue<Page> pageQueue,
+    protected WorkerImpl(final GeneratorPipe<Path> documentQueue,
+                         final FilterPipe<Page> pageQueue,
                          final Set<String> stopwords,
                          final SharedWorkerState state,
-                         final WordCounter counter) {
+                         final WordCounterImpl counter) {
         this.documentQueue = Objects.requireNonNull(documentQueue);
         this.pageQueue = Objects.requireNonNull(pageQueue);
         this.stopwords = new HashSet<>(stopwords);
@@ -49,7 +49,7 @@ class WorkerImpl extends Thread implements Worker {
                 }
                 for (int page = 1; page <= pdfDocument.getNumberOfPages(); page++) {
                     this.state.checkForSuspension();
-                    this.pageQueue.enqueue(null); //TODO: enqueue page
+                    this.pageQueue.enqueue(new PageImpl(pdfDocument, page));
                 }
             } while (true);
             final PDFTextStripper stripper = new PDFTextStripper();

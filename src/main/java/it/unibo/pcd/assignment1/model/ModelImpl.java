@@ -8,14 +8,12 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 public class ModelImpl implements Model {
     private Optional<WorkerPool> workerPool;
-    private Optional<WordCounter> sharedCounter;
+    private Optional<WordCounterImpl> sharedCounter;
 
     public ModelImpl() {
         this.sharedCounter = Optional.empty();
@@ -24,12 +22,11 @@ public class ModelImpl implements Model {
 
     @Override
     public void startCalculation(final Path filesDirectory, final Path stopwordsFile, final int wordsNumber) throws IOException {
-        this.sharedCounter = Optional.of(new WordCounter());
+        this.sharedCounter = Optional.of(new WordCounterImpl(wordsNumber));
         this.workerPool = Optional.of(new WorkerPoolImpl(Files.list(filesDirectory)
                                                               .filter(p -> p.toString().matches(".*pdf$"))
                                                               .collect(Collectors.toSet()),
                                                          new HashSet<>(Files.readAllLines(stopwordsFile)),
-                                                         wordsNumber,
                                                          this.sharedCounter.get()));
         this.workerPool.get().start();
     }
@@ -46,6 +43,6 @@ public class ModelImpl implements Model {
 
     @Override
     public Optional<Update> getLatestUpdate() {
-        return this.sharedCounter.flatMap(WordCounter::dequeue);
+        return this.sharedCounter.flatMap(WordCounterImpl::dequeue);
     }
 }

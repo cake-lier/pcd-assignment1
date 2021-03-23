@@ -1,7 +1,7 @@
 package it.unibo.pcd.assignment1.concurrency;
-import it.unibo.pcd.assignment1.model.concurrency.CloseableResourceQueue;
-import it.unibo.pcd.assignment1.model.concurrency.CloseableResourceQueueImpl;
-import it.unibo.pcd.assignment1.model.concurrency.ResourceQueue;
+import it.unibo.pcd.assignment1.model.concurrency.FilterPipe;
+import it.unibo.pcd.assignment1.model.concurrency.FilterPipeImpl;
+import it.unibo.pcd.assignment1.model.concurrency.GeneratorPipe;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -11,12 +11,12 @@ import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class CloseableResourceQueueTest extends AbstractResourceQueueTest{
+public class FilterQueueTest extends AbstractGeneratorPipeTest {
 
-    private CloseableResourceQueue<Integer> closableResourceQueue;
+    private FilterPipe<Integer> closableResourceQueue;
     @BeforeEach
     public void init(){
-        this.closableResourceQueue = new CloseableResourceQueueImpl<>();
+        this.closableResourceQueue = new FilterPipeImpl<>();
     }
 
     @Test
@@ -46,8 +46,8 @@ public class CloseableResourceQueueTest extends AbstractResourceQueueTest{
     }
 
     @Override
-    protected ResourceQueue<Integer> createIntegerQueue() {
-        return new CloseableResourceQueueImpl<>();
+    protected GeneratorPipe<Integer> createIntegerQueue() {
+        return new FilterPipeImpl<>();
     }
 
     private void fillQueue(){

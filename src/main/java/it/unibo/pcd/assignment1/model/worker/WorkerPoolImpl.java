@@ -1,7 +1,11 @@
 package it.unibo.pcd.assignment1.model.worker;
 
-import it.unibo.pcd.assignment1.model.WordCounter;
-import it.unibo.pcd.assignment1.model.concurrency.ResourceQueueImpl;
+import it.unibo.pcd.assignment1.model.Page;
+import it.unibo.pcd.assignment1.model.WordCounterImpl;
+import it.unibo.pcd.assignment1.model.concurrency.FilterPipe;
+import it.unibo.pcd.assignment1.model.concurrency.FilterPipeImpl;
+import it.unibo.pcd.assignment1.model.concurrency.GeneratorPipe;
+import it.unibo.pcd.assignment1.model.concurrency.GeneratorPipeImpl;
 
 import java.nio.file.Path;
 import java.util.Collection;
@@ -17,12 +21,13 @@ public class WorkerPoolImpl implements WorkerPool {
 
     public WorkerPoolImpl(final Set<Path> filesToProcess,
                           final Set<String> stopwords,
-                          final int wordsNumber,
-                          final WordCounter sharedCounter) {
+                          final WordCounterImpl sharedCounter) {
         this.sharedState = new SharedWorkerStateImpl();
+        final GeneratorPipe<Path> documentsPipe = new GeneratorPipeImpl<>(filesToProcess);
+        final FilterPipe<Page> pagesPipe = new FilterPipeImpl<>();
         this.workers = IntStream.range(0, MAX_NUM_WORKERS)
-                                .mapToObj(i -> new WorkerImpl(new ResourceQueueImpl<>(filesToProcess),
-                                                              null,
+                                .mapToObj(i -> new WorkerImpl(documentsPipe,
+                                                              pagesPipe,
                                                               stopwords,
                                                               this.sharedState,
                                                               sharedCounter))

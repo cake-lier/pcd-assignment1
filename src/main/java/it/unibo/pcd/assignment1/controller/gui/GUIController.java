@@ -9,6 +9,7 @@ import it.unibo.pcd.assignment1.view.View;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.Objects;
+import java.util.Optional;
 
 public class GUIController implements Controller {
     private final Model model;
@@ -26,14 +27,14 @@ public class GUIController implements Controller {
             this.model.startCalculation(filesDirectory, stopwordsFile, wordsNumber);
             new Thread(() -> {
                 do {
-                    final Update update = this.model.getLatestUpdate();
+                    final Optional<Update> optionalUpdate = this.model.getLatestUpdate();
+                    if (!optionalUpdate.isPresent()) {
+                        break;
+                    }
+                    final Update update = optionalUpdate.get();
                     this.view.displayProgress(update.getFrequencies(), update.getProcessedWords());
-                    try {
-                        Thread.sleep(17); //TODO: do better...
-                    } catch (final InterruptedException ignored) {}
-                } while (!this.model.isCalculationCompleted());
-                final Update update = this.model.getLatestUpdate();
-                this.view.displayProgress(update.getFrequencies(), update.getProcessedWords());
+                } while (true);
+                this.view.displayCompletion();
             }).start();
         } catch (final IOException ex) {
             ex.printStackTrace();

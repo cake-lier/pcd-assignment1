@@ -1,6 +1,6 @@
 package it.unibo.pcd.assignment1.concurrency;
 
-import it.unibo.pcd.assignment1.model.concurrency.ResourceQueue;
+import it.unibo.pcd.assignment1.model.concurrency.GeneratorPipe;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -11,17 +11,17 @@ import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public abstract class AbstractResourceQueueTest {
+public abstract class AbstractGeneratorPipeTest {
     private static final int SUPPORT_DATA_LENGTH = 30;
     private static final int SLEEP_MILLISECONDS = 1000;
     private static final int SINGLE_INT_VALUE = 0;
     protected List<Integer> supportData;
-    protected ResourceQueue<Integer> resourceQueue;
+    protected GeneratorPipe<Integer> generatorPipe;
 
     @BeforeEach
     public void  initialize(){
         this.supportData= new Random().ints(SUPPORT_DATA_LENGTH).boxed().collect(Collectors.toList());
-        this.resourceQueue = createIntegerQueue();
+        this.generatorPipe = createIntegerQueue();
     }
 
     @Test
@@ -44,7 +44,7 @@ public abstract class AbstractResourceQueueTest {
         supportData.forEach(e-> {
             try {
                 createThread(()->{
-                    final Optional<Integer> result = this.resourceQueue.dequeue();
+                    final Optional<Integer> result = this.generatorPipe.dequeue();
                     if(!result.isPresent()){
                        flag.set(false);
                     }
@@ -60,8 +60,8 @@ public abstract class AbstractResourceQueueTest {
 
     @Test
     public void testEnqueueOneIsPresent(){
-        resourceQueue.enqueue(SINGLE_INT_VALUE);
-        assertEquals(Optional.of(SINGLE_INT_VALUE),resourceQueue.dequeue());
+        generatorPipe.enqueue(SINGLE_INT_VALUE);
+        assertEquals(Optional.of(SINGLE_INT_VALUE), generatorPipe.dequeue());
     }
 
     @Test
@@ -73,18 +73,18 @@ public abstract class AbstractResourceQueueTest {
     public void testDequeueValues(){
         this.fillQueue();
         supportData.forEach(e-> {
-            final Optional<Integer> result = resourceQueue.dequeue();
+            final Optional<Integer> result = generatorPipe.dequeue();
             assertTrue(result.isPresent());
             result.ifPresent(integer -> assertEquals(e, integer));
         });
     }
 
-    protected void fillQueue(Collection<Integer> collection,ResourceQueue<Integer> resourceQueue){
-        collection.forEach(resourceQueue::enqueue);
+    protected void fillQueue(Collection<Integer> collection, GeneratorPipe<Integer> generatorPipe){
+        collection.forEach(generatorPipe::enqueue);
     }
 
     private void fillQueue(){
-        this.fillQueue(supportData,resourceQueue);
+        this.fillQueue(supportData, generatorPipe);
     }
 
     protected Thread createThread(Runnable runnable){
@@ -93,6 +93,6 @@ public abstract class AbstractResourceQueueTest {
         return thread;
     }
 
-    abstract protected ResourceQueue<Integer> createIntegerQueue();
+    abstract protected GeneratorPipe<Integer> createIntegerQueue();
 
 }
