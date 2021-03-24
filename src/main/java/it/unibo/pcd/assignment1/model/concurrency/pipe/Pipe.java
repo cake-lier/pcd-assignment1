@@ -1,4 +1,4 @@
-package it.unibo.pcd.assignment1.model.concurrency;
+package it.unibo.pcd.assignment1.model.concurrency.pipe;
 
 import java.util.Optional;
 

@@ -1,8 +1,8 @@
 package it.unibo.pcd.assignment1.model.policy.impl;
 
 import it.unibo.pcd.assignment1.model.agent.AgentFactory;
-import it.unibo.pcd.assignment1.model.agent.impl.AgentFactoryImpl;
-import it.unibo.pcd.assignment1.model.concurrency.Pipe;
+import it.unibo.pcd.assignment1.model.concurrency.pipe.Pipe;
+import it.unibo.pcd.assignment1.model.concurrency.pipe.PipeConnector;
 import it.unibo.pcd.assignment1.model.update.Update;
 import it.unibo.pcd.assignment1.view.View;
 
@@ -23,9 +23,9 @@ public class ControllerFilterPolicy extends AbstractPipePolicy<Update, Path> {
     private final Path stopwordsFile;
     private final AgentFactory factory;
 
-    public ControllerFilterPolicy(final View view,final Path filesDirectory,final Path stopwordsFile,
-                                  final AgentFactory factory,final Pipe<Path> pathPipe,final Pipe<Update> updatePipe) {
-        super(updatePipe, pathPipe);
+    public ControllerFilterPolicy(final View view, final Path filesDirectory, final Path stopwordsFile,
+                                  final AgentFactory factory, final PipeConnector<Update,Path> connector) {
+        super(connector);
         this.view = view;
         this.factory = factory;
         this.filesDirectory = filesDirectory;
@@ -34,10 +34,10 @@ public class ControllerFilterPolicy extends AbstractPipePolicy<Update, Path> {
 
     @Override
     public void start() {
-        this.filePaths(filesDirectory).forEach(this.getProductPipe()::enqueue);
+        this.filePaths(filesDirectory).forEach(this.getConnector()::writeInPipe);
         this.createAgents(factory,computeNumberOfThreads(),this.getStopwards(stopwordsFile));
         do {
-            final Optional<Update> update = this.getSourcePipe().dequeue();
+            final Optional<Update> update = this.getConnector().readFromPipe();
             if (!update.isPresent()) {
                 break;
             }

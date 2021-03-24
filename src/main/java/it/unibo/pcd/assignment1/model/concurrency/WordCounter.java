@@ -1,12 +1,13 @@
 package it.unibo.pcd.assignment1.model.concurrency;
 
+import it.unibo.pcd.assignment1.model.concurrency.pipe.impl.BoundedPipe;
 import it.unibo.pcd.assignment1.model.update.Update;
 import it.unibo.pcd.assignment1.model.update.UpdateImpl;
 
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class WordCounter extends BoundedPipe<Update>{
+public class WordCounter extends BoundedPipe<Update> {
     private final int wordsNumber;
     private final Map<String, Long> frequencies;
     private int processedWords;

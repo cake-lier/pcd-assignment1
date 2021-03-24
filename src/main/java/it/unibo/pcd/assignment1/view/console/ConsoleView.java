@@ -1,6 +1,7 @@
 package it.unibo.pcd.assignment1.view.console;
 
 import it.unibo.pcd.assignment1.controller.Controller;
+import it.unibo.pcd.assignment1.controller.MioController;
 import it.unibo.pcd.assignment1.view.View;
 
 import java.nio.file.Path;
@@ -8,6 +9,7 @@ import java.nio.file.Paths;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 
 public class ConsoleView implements View {
     public static final String NOT_ENOUGH_ARGUMENTS_ERROR = "Not enough arguments";
@@ -22,15 +24,15 @@ public class ConsoleView implements View {
     private final int numberWords;
     private final Path stopwordsFile;
 
-    public ConsoleView(final Controller controller, final List<String> arguments) {
-        this.controller = Objects.requireNonNull(controller);
+    public ConsoleView(final List<String> arguments) {
+        this.controller = new MioController(this);
         if (arguments.size() < 3) {
             System.err.println(NOT_ENOUGH_ARGUMENTS_ERROR);
             this.controller.exit();
         }
-        this.filesDirectory = Paths.get(arguments.get(0));
-        this.numberWords = Integer.parseInt(arguments.get(1));
-        this.stopwordsFile = Paths.get(arguments.get(2));
+        this.filesDirectory = Paths.get("C:\\Users\\Lorenzo\\pdfs");//Paths.get(arguments.get(0));
+        this.numberWords = 5;//Integer.parseInt(arguments.get(1));
+        this.stopwordsFile = Paths.get("C:\\Users\\Lorenzo\\stopwords.txt");//Paths.get(arguments.get(2));
     }
 
     @Override

@@ -36,8 +36,6 @@ sourceSets {
             exclude("it/unibo/pcd/assignment1/model/WordCounterImpl.java")
             exclude("it/unibo/pcd/assignment1/controller/console/**")
             exclude("it/unibo/pcd/assignment1/controller/gui/**")
-            exclude("it/unibo/pcd/assignment1/controller/console/**")
-            exclude("it/unibo/pcd/assignment1/main/ConsoleMain.java")
         }
     }
     test {

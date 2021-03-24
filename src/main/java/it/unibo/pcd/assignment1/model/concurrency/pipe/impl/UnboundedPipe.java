@@ -1,30 +1,29 @@
-package it.unibo.pcd.assignment1.model.concurrency;
+package it.unibo.pcd.assignment1.model.concurrency.pipe.impl;
 
-import java.util.*;
+import it.unibo.pcd.assignment1.model.concurrency.pipe.Pipe;
+
+import java.util.LinkedList;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.Queue;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
-public class BoundedPipe<E> implements Pipe<E> {
+public class UnboundedPipe<E> implements Pipe<E> {
     private static final String EXCEPTION_MESSAGE = "It's not possible to add values to a closed pipe";
 
-    private final Lock lock;
+    protected final Lock lock;
     private final Queue<E> queue;
     private final Condition notEmpty;
-    private final Condition notFull;
-    private final int maxNumberOfElements;
 
     private boolean isClosed;
-    private boolean isFull;
 
-    public BoundedPipe(final int maxNumberOfElements) {
+    public UnboundedPipe() {
         this.queue = new LinkedList<>();
         this.lock = new ReentrantLock();
         this.isClosed = false;
         this.notEmpty = this.lock.newCondition();
-        this.notFull = this.lock.newCondition();
-        this.maxNumberOfElements = maxNumberOfElements;
-        this.isFull = false;
     }
 
     @Override
@@ -36,7 +35,6 @@ public class BoundedPipe<E> implements Pipe<E> {
             this.lock.unlock();
         }
     }
-
     @Override
     public final void enqueue(E value) {
         try {
@@ -66,10 +64,6 @@ public class BoundedPipe<E> implements Pipe<E> {
                 this.notEmpty.await();
             } catch (InterruptedException ignored) {}
         }
-        if(!this.isClosed && this.isFull){
-            this.notFull.signalAll();
-            this.isFull = false;
-        }
         return this.isClosed ? Optional.empty() : Optional.ofNullable(this.queue.poll());
     }
 
@@ -77,19 +71,13 @@ public class BoundedPipe<E> implements Pipe<E> {
         if (this.isClosed) {
             throw new IllegalStateException(EXCEPTION_MESSAGE);
         }else{
-            while(this.isFull){
-                try {
-                    this.notFull.await();
-                } catch (InterruptedException ignored) {}
-            }
             if (this.queue.isEmpty()) {
                 this.notEmpty.signalAll();
             }
             this.queue.add(Objects.requireNonNull(value));
-            if(this.queue.size() > this.maxNumberOfElements){
-                this.isFull = true;
-            }
         }
     }
-
+    protected synchronized int getSize(){
+        return this.queue.size();
+    }
 }

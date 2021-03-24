@@ -1,22 +1,18 @@
 package it.unibo.pcd.assignment1.model.policy.impl;
 
+import it.unibo.pcd.assignment1.model.concurrency.pipe.PipeConnector;
 import it.unibo.pcd.assignment1.model.policy.Policy;
-import it.unibo.pcd.assignment1.model.concurrency.Pipe;
+import it.unibo.pcd.assignment1.model.concurrency.pipe.Pipe;
 
 public abstract class AbstractPipePolicy<R,P> implements Policy {
-    private final Pipe<R> sourcePipe;
-    private final Pipe<P> productPipe;
+    private final PipeConnector<R,P> pipeConnector;
 
-    public AbstractPipePolicy(final Pipe<R> sourcePipe,final Pipe<P> productPipe){
-        this.sourcePipe = sourcePipe;
-        this.productPipe = productPipe;
+    public AbstractPipePolicy(PipeConnector<R,P> pipeConnector){
+        this.pipeConnector = pipeConnector;
     }
 
-    public Pipe<P> getProductPipe() {
-        return productPipe;
-    }
-
-    public Pipe<R> getSourcePipe() {
-        return sourcePipe;
+    public PipeConnector<R,P> getConnector(){
+        return this.pipeConnector;
     }
 }
+
