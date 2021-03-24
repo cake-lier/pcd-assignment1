@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.nio.file.Path;
 
 public class PathFilterPolicy extends AbstractSingleProductFilterPolicy<Path, Document> {
+    static int files = 0;
 
     public PathFilterPolicy(final Pipe<Path> sourcePaths,final Pipe<Document> productDocuments,
                             final SharedAgentState agentState) {

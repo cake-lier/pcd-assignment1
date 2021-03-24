@@ -48,11 +48,11 @@ public class BoundedPipe<E> implements Pipe<E> {
     }
 
     @Override
-    public void close() {
+    public final void close() {
         try {
             this.lock.lock();
             this.isClosed = true;
-            if (this.isEmpty()) {
+            if (this.queue.isEmpty()) {
                 this.notEmpty.notifyAll();
             }
         } finally {
@@ -61,7 +61,7 @@ public class BoundedPipe<E> implements Pipe<E> {
     }
 
     protected Optional<E> doDequeue() {
-        while (this.isEmpty() && !this.isClosed) {
+        while (this.queue.isEmpty() && !this.isClosed) {
             try {
                 this.notEmpty.await();
             } catch (InterruptedException ignored) {}
@@ -82,7 +82,7 @@ public class BoundedPipe<E> implements Pipe<E> {
                     this.notFull.await();
                 } catch (InterruptedException ignored) {}
             }
-            if (this.isEmpty()) {
+            if (this.queue.isEmpty()) {
                 this.notEmpty.signalAll();
             }
             this.queue.add(Objects.requireNonNull(value));
@@ -92,5 +92,4 @@ public class BoundedPipe<E> implements Pipe<E> {
         }
     }
 
-    protected boolean isEmpty(){ return this.queue.isEmpty(); }
 }

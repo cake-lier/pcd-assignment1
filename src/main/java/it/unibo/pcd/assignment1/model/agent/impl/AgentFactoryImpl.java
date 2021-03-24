@@ -27,7 +27,7 @@ public class AgentFactoryImpl implements AgentFactory {
 
     private final Pipe<Path> paths;
     private final Pipe<Document> documents;
-    private final Pipe<Page> pages;
+    private final Pipe<String> pages;
     private final Pipe<Update> updates;
     private final SharedAgentState agentState;
 

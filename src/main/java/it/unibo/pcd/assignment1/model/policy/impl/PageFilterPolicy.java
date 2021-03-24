@@ -11,22 +11,22 @@ import org.apache.pdfbox.text.PDFTextStripper;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Set;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
-public class PageFilterPolicy extends AbstractSingleProductFilterPolicy<Page, Update> {
+public class PageFilterPolicy extends AbstractSingleProductFilterPolicy<String, Update> {
     private static final int SINGLE_PAGE_NUMBER = 1;
-
     private final Set<String> stopwards;
 
-    public PageFilterPolicy(final Pipe<Page> sourcePages,final Pipe<Update> productUpdate,
+    public PageFilterPolicy(final Pipe<String> sourcePages,final Pipe<Update> productUpdate,
                             final Set<String> stopwords,final SharedAgentState agentState){
         super(sourcePages, productUpdate,agentState);
         this.stopwards = stopwords;
     }
 
     @Override
-    protected Update transformSingleValue(Page page) {
+    protected Update transformSingleValue(String page) {
         return this.wordsToUpdate(this.exctractWords(page));
     }
 
@@ -38,16 +38,9 @@ public class PageFilterPolicy extends AbstractSingleProductFilterPolicy<Page, Up
                 words.length);
     }
 
-    private String[] exctractWords(final Page page){
-        try {
-            final PDFTextStripper stripper = new PDFTextStripper();
-            stripper.setStartPage(page.getPageIndex());
-            stripper.setEndPage(page.getPageIndex());
-            return Pattern.compile("\\W+").split(stripper.getText(page.getData()));
-        } catch (IOException e) {
-            e.printStackTrace();
-            return null; //TODO oh shit, here we go again...
-        }
-
+    private String[] exctractWords(final String page){
+            final String[] words = Pattern.compile("\\W+").split(page);
+            System.out.println(Arrays.asList(words));
+            return words;
     }
 }
