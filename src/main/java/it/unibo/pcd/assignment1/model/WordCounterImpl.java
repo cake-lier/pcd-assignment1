@@ -1,6 +1,5 @@
 package it.unibo.pcd.assignment1.model;
 
-import it.unibo.pcd.assignment1.model.concurrency.FilterPipeImpl;
 import it.unibo.pcd.assignment1.model.update.Update;
 import it.unibo.pcd.assignment1.model.update.UpdateImpl;
 

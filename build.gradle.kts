@@ -29,6 +29,17 @@ tasks.test {
 
 //TODO: delete when tests are fixed
 sourceSets {
+    main {
+        java {
+            exclude("it/unibo/pcd/assignment1/model/worker/**")
+            exclude("it/unibo/pcd/assignment1/model/ModelImpl.java")
+            exclude("it/unibo/pcd/assignment1/model/WordCounterImpl.java")
+            exclude("it/unibo/pcd/assignment1/controller/console/**")
+            exclude("it/unibo/pcd/assignment1/controller/gui/**")
+            exclude("it/unibo/pcd/assignment1/controller/console/**")
+            exclude("it/unibo/pcd/assignment1/main/ConsoleMain.java")
+        }
+    }
     test {
         java {
             exclude("it/unibo/pcd/assignment1/concurrency/**")

@@ -2,7 +2,6 @@ package it.unibo.pcd.assignment1.model.worker;
 
 import it.unibo.pcd.assignment1.model.Page;
 import it.unibo.pcd.assignment1.model.WordCounterImpl;
-import it.unibo.pcd.assignment1.model.concurrency.FilterPipe;
 import it.unibo.pcd.assignment1.model.concurrency.GeneratorPipe;
 import it.unibo.pcd.assignment1.model.update.UpdateImpl;
 import org.apache.pdfbox.pdmodel.PDDocument;

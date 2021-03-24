@@ -1,7 +1,7 @@
 package it.unibo.pcd.assignment1.view.gui;
 
 import it.unibo.pcd.assignment1.controller.Controller;
-import it.unibo.pcd.assignment1.controller.gui.GUIController;
+import it.unibo.pcd.assignment1.controller.MioController;
 import it.unibo.pcd.assignment1.view.View;
 import javafx.application.Platform;
 import javafx.collections.ObservableList;
@@ -19,6 +19,7 @@ import javafx.stage.Stage;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
@@ -64,7 +65,7 @@ public class GUIView implements View {
 
     public GUIView(final Stage primaryStage) {
         this.primaryStage = Objects.requireNonNull(primaryStage);
-        this.controller = new GUIController(this);
+        this.controller = new MioController(this);//new GUIController(this);
         this.filesDirectoryPath = Optional.empty();
         this.stopwordsFilePath = Optional.empty();
     }
@@ -73,6 +74,8 @@ public class GUIView implements View {
     public void show() {
         Platform.runLater(() -> {
             try {
+                this.filesDirectoryPath = Optional.of(Paths.get("C:\\Users\\Lorenzo\\pdfs"));
+                this.stopwordsFilePath = Optional.of(Paths.get("C:\\Users\\Lorenzo\\stopwords.txt"));
                 final FXMLLoader loader = new FXMLLoader(ClassLoader.getSystemResource(FXML_FILENAME));
                 loader.setController(this);
                 final BorderPane borderPane = loader.load();
@@ -111,8 +114,12 @@ public class GUIView implements View {
                 this.primaryStage.sizeToScene();
                 this.primaryStage.setTitle(APP_TITLE);
                 this.primaryStage.show();
-                this.primaryStage.setMinWidth(this.primaryStage.getWidth());
-                this.primaryStage.setMinHeight(this.primaryStage.getHeight());
+                this.primaryStage.setWidth(500);
+                this.primaryStage.setHeight(500);
+                //TODO riattivare
+                this.primaryStage.centerOnScreen();
+                //this.primaryStage.setMinWidth(this.primaryStage.getWidth());
+                //this.primaryStage.setMinHeight(this.primaryStage.getHeight());
             } catch (final IOException ex) {
                 this.displayError(String.format(FXML_FILE_ERROR_MSG, ex.getMessage()));
             }

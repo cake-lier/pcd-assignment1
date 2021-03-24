@@ -1,6 +1,4 @@
 package it.unibo.pcd.assignment1.concurrency;
-import it.unibo.pcd.assignment1.model.concurrency.FilterPipe;
-import it.unibo.pcd.assignment1.model.concurrency.FilterPipeImpl;
 import it.unibo.pcd.assignment1.model.concurrency.GeneratorPipe;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
