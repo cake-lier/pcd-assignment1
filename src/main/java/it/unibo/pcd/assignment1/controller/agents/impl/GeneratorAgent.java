@@ -9,11 +9,11 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
 
-public class GeneratorSinkAgent extends Thread implements Agent {
+public class GeneratorAgent extends Thread implements Agent {
     private final List<Task> tasks;
     private final View view;
 
-    public GeneratorSinkAgent(final Collection<Task> tasks, final View view) {
+    public GeneratorAgent(final Collection<Task> tasks, final View view) {
         this.tasks = new ArrayList<>(tasks);
         this.view = Objects.requireNonNull(view);
     }

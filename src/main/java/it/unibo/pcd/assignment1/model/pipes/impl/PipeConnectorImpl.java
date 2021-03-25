@@ -23,4 +23,14 @@ public class PipeConnectorImpl<R,P> implements PipeConnector<R,P> {
     public Optional<R> read() {
         return this.sourcePipe.dequeue();
     }
+
+    @Override
+    public Pipe<R> getInputPipe() {
+        return this.sourcePipe;
+    }
+
+    @Override
+    public Pipe<P> getOutputPipe() {
+        return this.productPipe;
+    }
 }

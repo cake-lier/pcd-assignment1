@@ -6,4 +6,8 @@ public interface PipeConnector<I, O> {
     void write(O output);
 
     Optional<I> read();
+
+    Pipe<I> getInputPipe();
+
+    Pipe<O> getOutputPipe();
 }

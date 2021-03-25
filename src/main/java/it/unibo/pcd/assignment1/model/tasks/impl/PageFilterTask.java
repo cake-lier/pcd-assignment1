@@ -1,6 +1,7 @@
 package it.unibo.pcd.assignment1.model.tasks.impl;
 
 import it.unibo.pcd.assignment1.controller.agents.AgentSuspendedFlag;
+import it.unibo.pcd.assignment1.controller.agents.AgentTicketManager;
 import it.unibo.pcd.assignment1.model.pipes.PipeConnector;
 import it.unibo.pcd.assignment1.model.updates.Update;
 import it.unibo.pcd.assignment1.model.updates.UpdateImpl;
@@ -17,8 +18,9 @@ public class PageFilterTask extends AbstractSingletonFilterTask<String, Update> 
 
     public PageFilterTask(final PipeConnector<String, Update> pipeConnector,
                           final Set<String> stopwords,
-                          final AgentSuspendedFlag agentState) {
-        super(pipeConnector, agentState);
+                          final AgentSuspendedFlag agentState,
+                          final AgentTicketManager ticketManager) {
+        super(pipeConnector, agentState,ticketManager);
         this.stopwords = new HashSet<>(stopwords);
     }
 
@@ -31,4 +33,5 @@ public class PageFilterTask extends AbstractSingletonFilterTask<String, Update> 
                                     .collect(Collectors.groupingBy(Function.identity(), Collectors.counting())),
                               words.length);
     }
+
 }
