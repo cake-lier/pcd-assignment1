@@ -20,7 +20,7 @@ public class PipeConnectorImpl<R,P> implements PipeConnector<R,P> {
     }
 
     @Override
-    public Optional<R> readFromPipe() {
+    public Optional<R> read() {
         return this.sourcePipe.dequeue();
     }
 }

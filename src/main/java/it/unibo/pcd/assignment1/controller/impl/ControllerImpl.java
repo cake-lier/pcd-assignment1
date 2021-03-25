@@ -27,7 +27,7 @@ public class ControllerImpl implements Controller {
             stopwordsFile,
             wordsNumber,
             this.suspendedFlag
-        ))).execute();
+        )), this.view).start();
     }
 
     @Override

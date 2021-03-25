@@ -31,7 +31,7 @@ tasks.test {
 sourceSets {
     test {
         java {
-            exclude("it/unibo/pcd/assignment1/concurrency/**")
+            exclude("it/unibo/pcd/assignment1/**")
         }
     }
 }

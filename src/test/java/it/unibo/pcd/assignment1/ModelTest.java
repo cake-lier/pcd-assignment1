@@ -1,6 +1,8 @@
 package it.unibo.pcd.assignment1;
 
-import it.unibo.pcd.assignment1.model.update.Update;
+import it.unibo.pcd.assignment1.controller.Controller;
+import it.unibo.pcd.assignment1.controller.impl.ControllerImpl;
+import it.unibo.pcd.assignment1.model.updates.Update;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -33,7 +35,6 @@ public class ModelTest {
 
     @Test
     void testExampleCase() throws IOException, URISyntaxException {
-        final Model model = new ModelImpl();
         model.startCalculation(Paths.get(ClassLoader.getSystemResource(PDFS_FOLDER_NAME).toURI()),
                                Paths.get(ClassLoader.getSystemResource(STOPWORDS_FILE_NAME).toURI()),
                                WORDS_NUMBER);
