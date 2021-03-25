@@ -1,7 +1,7 @@
 package it.unibo.pcd.assignment1.view.gui;
 
 import it.unibo.pcd.assignment1.controller.Controller;
-import it.unibo.pcd.assignment1.controller.MioController;
+import it.unibo.pcd.assignment1.controller.impl.ControllerImpl;
 import it.unibo.pcd.assignment1.view.View;
 import javafx.application.Platform;
 import javafx.collections.ObservableList;
@@ -19,7 +19,6 @@ import javafx.stage.Stage;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
@@ -64,18 +63,46 @@ public class GUIView implements View {
     private Label processedWordsLabel;
 
     public GUIView(final Stage primaryStage) {
+        this.controller = new ControllerImpl(this);
         this.primaryStage = Objects.requireNonNull(primaryStage);
-        this.controller = new MioController(this);//new GUIController(this);
         this.filesDirectoryPath = Optional.empty();
         this.stopwordsFilePath = Optional.empty();
+        this.show();
     }
 
     @Override
-    public void show() {
+    public void displayProgress(final Map<String, Long> frequencies, final long processedWords) {
+        Platform.runLater(() -> {
+            final ObservableList<XYChart.Series<String, Long>> data = this.barChart.getData();
+            final XYChart.Series<String, Long> series = new XYChart.Series<>();
+            frequencies.entrySet()
+                       .stream()
+                       .map(e -> new XYChart.Data<>(e.getKey(), e.getValue()))
+                       .forEach(d -> series.getData().add(d));
+            data.clear();
+            data.add(series);
+            this.processedWordsLabel.setText(String.format(PROCESSED_WORDS_LABEL_MSG, processedWords));
+        });
+    }
+
+    @Override
+    public void displayCompletion() {
+        Platform.runLater(() -> {
+            this.suspendButton.setDisable(true);
+            this.resetButton.setDisable(false);
+        });
+    }
+
+    @Override
+    public void displayError(final String message) {
+        Platform.runLater(() -> new Alert(Alert.AlertType.ERROR, message, ButtonType.OK).showAndWait());
+    }
+
+    private void show() {
         Platform.runLater(() -> {
             try {
-                this.filesDirectoryPath = Optional.of(Paths.get("C:\\Users\\Lorenzo\\pdfs"));
-                this.stopwordsFilePath = Optional.of(Paths.get("C:\\Users\\Lorenzo\\stopwords.txt"));
+                this.filesDirectoryPath = Optional.empty();
+                this.stopwordsFilePath = Optional.empty();
                 final FXMLLoader loader = new FXMLLoader(ClassLoader.getSystemResource(FXML_FILENAME));
                 loader.setController(this);
                 final BorderPane borderPane = loader.load();
@@ -114,42 +141,13 @@ public class GUIView implements View {
                 this.primaryStage.sizeToScene();
                 this.primaryStage.setTitle(APP_TITLE);
                 this.primaryStage.show();
-                this.primaryStage.setWidth(500);
-                this.primaryStage.setHeight(500);
-                //TODO riattivare
                 this.primaryStage.centerOnScreen();
-                //this.primaryStage.setMinWidth(this.primaryStage.getWidth());
-                //this.primaryStage.setMinHeight(this.primaryStage.getHeight());
+                this.primaryStage.setMinWidth(this.primaryStage.getWidth());
+                this.primaryStage.setMinHeight(this.primaryStage.getHeight());
             } catch (final IOException ex) {
                 this.displayError(String.format(FXML_FILE_ERROR_MSG, ex.getMessage()));
             }
         });
-    }
-
-    @Override
-    public void displayProgress(final Map<String, Long> frequencies, final long processedWords) {
-        Platform.runLater(() -> {
-            final ObservableList<XYChart.Series<String, Long>> data = this.barChart.getData();
-            final XYChart.Series<String, Long> series = new XYChart.Series<>();
-            frequencies.entrySet()
-                       .stream()
-                       .map(e -> new XYChart.Data<>(e.getKey(), e.getValue()))
-                       .forEach(d -> series.getData().add(d));
-            data.clear();
-            data.add(series);
-            this.processedWordsLabel.setText(String.format(PROCESSED_WORDS_LABEL_MSG, processedWords));
-        });
-    }
-
-    @Override
-    public void displayCompletion() {
-        this.suspendButton.setDisable(true);
-        this.resetButton.setDisable(false);
-    }
-
-    @Override
-    public void displayError(final String message) {
-        Platform.runLater(() -> new Alert(Alert.AlertType.ERROR, message, ButtonType.OK).showAndWait());
     }
 
     private void setFilesDirectoryControls() {

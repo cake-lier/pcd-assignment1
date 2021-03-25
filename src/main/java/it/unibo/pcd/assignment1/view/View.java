@@ -3,8 +3,6 @@ package it.unibo.pcd.assignment1.view;
 import java.util.Map;
 
 public interface View {
-    void show();
-
     void displayProgress(Map<String, Long> frequencies, long processedWords);
 
     void displayCompletion();
