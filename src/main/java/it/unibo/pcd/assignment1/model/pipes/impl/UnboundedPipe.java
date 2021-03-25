@@ -16,7 +16,6 @@ public class UnboundedPipe<E> implements Pipe<E> {
     protected final Lock lock;
     private final Queue<E> queue;
     private final Condition notEmpty;
-
     private boolean isClosed;
 
     public UnboundedPipe() {
@@ -28,17 +27,18 @@ public class UnboundedPipe<E> implements Pipe<E> {
 
     @Override
     public final Optional<E> dequeue() {
+        this.lock.lock();
         try {
-            this.lock.lock();
             return this.doDequeue();
         } finally {
             this.lock.unlock();
         }
     }
+
     @Override
-    public final void enqueue(E value) {
+    public final void enqueue(final E value) {
+        this.lock.lock();
         try {
-            this.lock.lock();
             this.doEnqueue(value);
         } finally {
             this.lock.unlock();
@@ -47,11 +47,11 @@ public class UnboundedPipe<E> implements Pipe<E> {
 
     @Override
     public final void close() {
+        this.lock.lock();
         try {
-            this.lock.lock();
             this.isClosed = true;
             if (this.queue.isEmpty()) {
-                this.notEmpty.notifyAll();
+                this.notEmpty.signalAll();
             }
         } finally {
             this.lock.unlock();
@@ -64,19 +64,19 @@ public class UnboundedPipe<E> implements Pipe<E> {
                 this.notEmpty.await();
             } catch (InterruptedException ignored) {}
         }
-        return this.isClosed ? Optional.empty() : Optional.ofNullable(this.queue.poll());
+        return Optional.ofNullable(this.queue.poll());
     }
 
-    protected void doEnqueue(E value) {
+    protected void doEnqueue(final E value) {
         if (this.isClosed) {
             throw new IllegalStateException(EXCEPTION_MESSAGE);
-        }else{
-            if (this.queue.isEmpty()) {
-                this.notEmpty.signalAll();
-            }
-            this.queue.add(Objects.requireNonNull(value));
         }
+        if (this.queue.isEmpty()) {
+            this.notEmpty.signalAll();
+        }
+        this.queue.add(Objects.requireNonNull(value));
     }
+
     protected synchronized int getSize(){
         return this.queue.size();
     }

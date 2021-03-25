@@ -71,7 +71,7 @@ public class GUIView implements View {
     }
 
     @Override
-    public void displayProgress(final Map<String, Long> frequencies, final long processedWords) {
+    public synchronized void displayProgress(final Map<String, Long> frequencies, final long processedWords) {
         Platform.runLater(() -> {
             final ObservableList<XYChart.Series<String, Long>> data = this.barChart.getData();
             final XYChart.Series<String, Long> series = new XYChart.Series<>();
@@ -86,7 +86,7 @@ public class GUIView implements View {
     }
 
     @Override
-    public void displayCompletion() {
+    public synchronized void displayCompletion() {
         Platform.runLater(() -> {
             this.suspendButton.setDisable(true);
             this.resetButton.setDisable(false);
@@ -94,7 +94,7 @@ public class GUIView implements View {
     }
 
     @Override
-    public void displayError(final String message) {
+    public synchronized void displayError(final String message) {
         Platform.runLater(() -> new Alert(Alert.AlertType.ERROR, message, ButtonType.OK).showAndWait());
     }
 
