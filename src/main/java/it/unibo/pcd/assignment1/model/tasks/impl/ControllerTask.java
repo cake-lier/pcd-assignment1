@@ -12,6 +12,7 @@ import it.unibo.pcd.assignment1.model.pipes.impl.WordCounter;
 import it.unibo.pcd.assignment1.model.updates.Update;
 import it.unibo.pcd.assignment1.view.View;
 import it.unibo.pcd.assignment1.wrapper.Document;
+import it.unibo.pcd.assignment1.wrapper.Page;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -27,7 +28,7 @@ public class ControllerTask extends AbstractTask{
     private final Path stopwordsFile;
     private final Pipe<Path> paths;
     private final Pipe<Document> documents;
-    private final Pipe<String> pages;
+    private final Pipe<Page> pages;
     private final Pipe<Update> updates;
 
     public ControllerTask(final View view,

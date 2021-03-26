@@ -3,16 +3,13 @@ package it.unibo.pcd.assignment1.controller.agents.impl;
 import it.unibo.pcd.assignment1.controller.agents.AgentSuspendedFlag;
 import it.unibo.pcd.assignment1.controller.agents.AgentTicketManager;
 import it.unibo.pcd.assignment1.model.pipes.Pipe;
-import it.unibo.pcd.assignment1.model.pipes.PipeConnector;
-import it.unibo.pcd.assignment1.model.pipes.impl.PipeConnectorImpl;
 import it.unibo.pcd.assignment1.model.tasks.Task;
 import it.unibo.pcd.assignment1.model.tasks.impl.DocumentFilterTask;
 import it.unibo.pcd.assignment1.model.tasks.impl.PageFilterTask;
 import it.unibo.pcd.assignment1.model.tasks.impl.PathFilterTask;
-import it.unibo.pcd.assignment1.model.tasks.impl.UpdateSinkTask;
 import it.unibo.pcd.assignment1.model.updates.Update;
-import it.unibo.pcd.assignment1.view.View;
 import it.unibo.pcd.assignment1.wrapper.Document;
+import it.unibo.pcd.assignment1.wrapper.Page;
 
 import java.nio.file.Path;
 import java.util.Arrays;
@@ -27,14 +24,14 @@ public class TaskIterator implements Iterator<Task> {
     public TaskIterator(final TaskType task,
                         final Pipe<Path> paths,
                         final Pipe<Document> documents,
-                        final Pipe<String> pages,
+                        final Pipe<Page> pages,
                         final Pipe<Update> updates,
                         final AgentSuspendedFlag agentState,
                         final AgentTicketManager ticketManager,
                         final Set<String> stopwords) {
-        this.tasks = Arrays.asList(new PathFilterTask(this.createPipeConnector(paths, documents), agentState,ticketManager),
-                                   new DocumentFilterTask(this.createPipeConnector(documents, pages), agentState,ticketManager),
-                                   new PageFilterTask(this.createPipeConnector(pages, updates), stopwords, agentState,ticketManager));
+        this.tasks = Arrays.asList(new PathFilterTask(paths, documents, agentState,ticketManager),
+                                   new DocumentFilterTask(documents, pages, agentState,ticketManager),
+                                   new PageFilterTask(pages, updates, stopwords, agentState,ticketManager));
         this.taskIndex = task.getIndex();
     }
 
@@ -48,10 +45,6 @@ public class TaskIterator implements Iterator<Task> {
         final Task task = this.tasks.get(this.taskIndex);
         this.taskIndex++;
         return task;
-    }
-
-    private <R, P> PipeConnector<R, P> createPipeConnector(final Pipe<R> resource, final Pipe<P> produce) {
-        return new PipeConnectorImpl<>(resource, produce);
     }
 
     public enum TaskType {

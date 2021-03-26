@@ -2,9 +2,10 @@ package it.unibo.pcd.assignment1.model.tasks.impl;
 
 import it.unibo.pcd.assignment1.controller.agents.AgentSuspendedFlag;
 import it.unibo.pcd.assignment1.controller.agents.AgentTicketManager;
-import it.unibo.pcd.assignment1.model.pipes.PipeConnector;
+import it.unibo.pcd.assignment1.model.pipes.Pipe;
 import it.unibo.pcd.assignment1.model.updates.Update;
 import it.unibo.pcd.assignment1.model.updates.UpdateImpl;
+import it.unibo.pcd.assignment1.wrapper.Page;
 
 import java.util.Arrays;
 import java.util.HashSet;
@@ -13,20 +14,21 @@ import java.util.function.Function;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
-public class PageFilterTask extends AbstractSingletonFilterTask<String, Update> {
+public class PageFilterTask extends AbstractSingletonFilterTask<Page, Update> {
     private final Set<String> stopwords;
 
-    public PageFilterTask(final PipeConnector<String, Update> pipeConnector,
+    public PageFilterTask(final Pipe<Page> pagePipe,
+                          final Pipe<Update> updatePipe,
                           final Set<String> stopwords,
                           final AgentSuspendedFlag agentState,
                           final AgentTicketManager ticketManager) {
-        super(pipeConnector, agentState,ticketManager);
+        super(pagePipe,updatePipe, agentState,ticketManager);
         this.stopwords = new HashSet<>(stopwords);
     }
 
     @Override
-    protected Update transformSingleton(final String page) {
-        final String[] words = Pattern.compile("\\W+").split(page);
+    protected Update transformSingleton(final Page page) {
+        final String[] words = Pattern.compile("\\W+").split(page.getText());
         return new UpdateImpl(Arrays.stream(words)
                                     .map(String::toLowerCase)
                                     .filter(w -> !this.stopwords.contains(w))

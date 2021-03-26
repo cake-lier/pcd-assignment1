@@ -102,8 +102,8 @@ public class GUIView implements View {
     private void show() {
         Platform.runLater(() -> {
             try {
-                this.filesDirectoryPath = Optional.of(Paths.get("C:\\Users\\Lorenzo\\pdfs"));//Optional.empty();
-                this.stopwordsFilePath = Optional.of(Paths.get("C:\\Users\\Lorenzo\\stopwords.txt"));//Optional.empty();
+                this.filesDirectoryPath = Optional.empty();
+                this.stopwordsFilePath = Optional.empty();
                 final FXMLLoader loader = new FXMLLoader(ClassLoader.getSystemResource(FXML_FILENAME));
                 loader.setController(this);
                 final BorderPane borderPane = loader.load();

@@ -1,21 +1,15 @@
 package it.unibo.pcd.assignment1.wrapper;
-
-import org.apache.pdfbox.pdmodel.PDDocument;
 import java.util.Objects;
 
-public class PageImpl extends PDFPartImpl implements Page {
-    private final int pageIndex;
-    private final PDDocument entireDocument;
+public class PageImpl implements Page {
+    private final String text;
 
-    public PageImpl(final PDDocument page,final PDDocument entireDocument, final int pageIndex) {
-        super(page);
-        this.entireDocument = entireDocument;
-        this.pageIndex = pageIndex;
+    public PageImpl(final String text) {
+        this.text = text;
     }
-
     @Override
-    public int getPageIndex() {
-        return this.pageIndex;
+    public String getText() {
+        return this.text;
     }
 
     @Override
@@ -27,16 +21,17 @@ public class PageImpl extends PDFPartImpl implements Page {
             return false;
         }
         final PageImpl page = (PageImpl) o;
-        return this.pageIndex == page.pageIndex && this.getData().equals(page.getData());
+        return this.text.equals(page.getText());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(this.getData(), this.pageIndex);
+        return Objects.hash(this.getText());
     }
 
     @Override
     public String toString() {
-        return "PageImpl{document=" + this.getData() + ", pageIndex=" + this.pageIndex + '}';
+        return "PageImpl{text=" + this.getText() + '}';
     }
+
 }
