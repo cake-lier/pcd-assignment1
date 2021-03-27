@@ -2,6 +2,7 @@ package it.unibo.pcd.assignment1.model.tasks.impl;
 
 import it.unibo.pcd.assignment1.controller.agents.Task;
 import it.unibo.pcd.assignment1.model.pipes.Pipe;
+import it.unibo.pcd.assignment1.model.pipes.impl.WordCounter;
 import it.unibo.pcd.assignment1.model.shared.AgentSuspendedFlag;
 import it.unibo.pcd.assignment1.model.shared.StopwordsSet;
 import it.unibo.pcd.assignment1.model.tasks.FilterTaskTypes;
@@ -54,12 +55,12 @@ public class TaskListFactory {
         return taskList;
     }
 
-    public static List<Task> createForSinkAgent(final Pipe<Update> updates,
+    public static List<Task> createForSinkAgent(final WordCounter wordCounter,
                                                 final Consumer<Update> updatesSink,
                                                 final Runnable completionNotifier,
                                                 final AgentSuspendedFlag suspendedFlag,
                                                 final TaskCounter ticketManager) {
-        return Collections.singletonList(new UpdateSinkTask(updates,
+        return Collections.singletonList(new UpdateSinkTask(wordCounter,
                                                             updatesSink,
                                                             completionNotifier,
                                                             suspendedFlag,

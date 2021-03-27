@@ -33,7 +33,7 @@ public class ControllerImpl implements Controller {
     private final View view;
     private final AgentSuspendedFlag suspendedFlag;
     private final TaskCounter taskCounter;
-    final Consumer<Exception> exceptionHandler;
+    private final Consumer<Exception> exceptionHandler;
 
     public ControllerImpl(final View view) {
         this.view = Objects.requireNonNull(view);
@@ -48,7 +48,7 @@ public class ControllerImpl implements Controller {
         final Pipe<Path> paths = new BoundedPipe<>(PIPE_MAX_NUMBER);
         final Pipe<DocumentImpl> documents = new BoundedPipe<>(PIPE_MAX_NUMBER);
         final Pipe<Page> pages = new BoundedPipe<>(PIPE_MAX_NUMBER);
-        final Pipe<Update> updates = new WordCounter(PIPE_MAX_NUMBER, wordsNumber);
+        final WordCounter updates = new WordCounter(PIPE_MAX_NUMBER, wordsNumber);
         new AgentImpl(
             TaskListFactory.createForGeneratorAgent(filesDirectory,
                                                     stopwordsFile,

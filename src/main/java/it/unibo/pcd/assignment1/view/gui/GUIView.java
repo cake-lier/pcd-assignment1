@@ -19,27 +19,29 @@ import javafx.stage.Stage;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 
 public class GUIView implements View {
-    public static final String STOPWORDS_FILE_ERROR_MSG = "Select a file containing the stopwords";
-    public static final String PDFS_FOLDER_ERROR_MSG = "Select a folder for your PDF files";
-    public static final String FXML_FILE_ERROR_MSG = "An error occured while loading configuration files: %s";
-    public static final String APP_TITLE = "Unique words counter";
-    public static final String FXML_FILENAME = "main.fxml";
-    public static final String PROCESSED_WORDS_LABEL_MSG = "Processed words: %d";
-    public static final String PDFS_FOLDER_CHOOSER_TITLE = "Choose directory with PDFs files";
-    public static final String INITIAL_DIRECTORY = System.getProperty("user.home");
-    public static final String STOPWORDS_FILE_CHOOSER_TITLE = "Choose stopwords file";
-    public static final String FILE_CHOOSER_DESC = "Text files";
-    public static final String FILE_CHOOSER_TXT_EXT = "*.txt";
-    public static final String FILE_NOT_CHOSEN_TEXT = "Select file...";
+    private static final String STOPWORDS_FILE_ERROR_MSG = "Select a file containing the stopwords";
+    private static final String PDFS_FOLDER_ERROR_MSG = "Select a folder for your PDF files";
+    private static final String FXML_FILE_ERROR_MSG = "An error occured while loading configuration files: %s";
+    private static final String APP_TITLE = "Unique words counter";
+    private static final String FXML_FILENAME = "main.fxml";
+    private static final String PROCESSED_WORDS_LABEL_MSG = "Processed words: %d";
+    private static final String PDFS_FOLDER_CHOOSER_TITLE = "Choose directory with PDFs files";
+    private static final String INITIAL_DIRECTORY = System.getProperty("user.home");
+    private static final String STOPWORDS_FILE_CHOOSER_TITLE = "Choose stopwords file";
+    private static final String FILE_CHOOSER_DESC = "Text files";
+    private static final String FILE_CHOOSER_TXT_EXT = "*.txt";
+    private static final String FILE_NOT_CHOSEN_TEXT = "Select file...";
+    private static final String SUSPEND_BUTTON_TEXT = "Suspend";
+    private static final String RESUME_BUTTON_TEXT = "Resume";
 
     private final Controller controller;
     private final Stage primaryStage;
+    private boolean isSuspended;
     private Optional<Path> filesDirectoryPath;
     private Optional<Path> stopwordsFilePath;
     @FXML
@@ -68,26 +70,28 @@ public class GUIView implements View {
         this.primaryStage = Objects.requireNonNull(primaryStage);
         this.filesDirectoryPath = Optional.empty();
         this.stopwordsFilePath = Optional.empty();
+        this.isSuspended = false;
         this.show();
     }
 
     @Override
-    public synchronized void displayProgress(final Map<String, Long> frequencies, final long processedWords) {
+    public void displayProgress(final Map<String, Long> frequencies, final long processedWords) {
         Platform.runLater(() -> {
             final ObservableList<XYChart.Series<String, Long>> data = this.barChart.getData();
+            data.clear();
+            this.barChart.layout();
             final XYChart.Series<String, Long> series = new XYChart.Series<>();
             frequencies.entrySet()
                        .stream()
                        .map(e -> new XYChart.Data<>(e.getKey(), e.getValue()))
                        .forEach(d -> series.getData().add(d));
-            data.clear();
             data.add(series);
             this.processedWordsLabel.setText(String.format(PROCESSED_WORDS_LABEL_MSG, processedWords));
         });
     }
 
     @Override
-    public synchronized void displayCompletion() {
+    public void displayCompletion() {
         Platform.runLater(() -> {
             this.suspendButton.setDisable(true);
             this.resetButton.setDisable(false);
@@ -95,60 +99,65 @@ public class GUIView implements View {
     }
 
     @Override
-    public synchronized void displayError(final String message) {
+    public void displayError(final String message) {
         Platform.runLater(() -> new Alert(Alert.AlertType.ERROR, message, ButtonType.OK).showAndWait());
     }
 
     private void show() {
-        Platform.runLater(() -> {
-            try {
-                this.filesDirectoryPath = Optional.empty();
-                this.stopwordsFilePath = Optional.empty();
-                final FXMLLoader loader = new FXMLLoader(ClassLoader.getSystemResource(FXML_FILENAME));
-                loader.setController(this);
-                final BorderPane borderPane = loader.load();
-                this.setFilesDirectoryControls();
-                this.setStopwordsFileControls();
-                this.startButton.setOnMouseClicked(e -> {
-                    if (this.filesDirectoryPath.isPresent()) {
-                        if (this.stopwordsFilePath.isPresent()) {
-                            this.startButton.setDisable(true);
-                            this.suspendButton.setDisable(false);
-                            this.controller.launch(this.filesDirectoryPath.get(),
-                                                   this.stopwordsFilePath.get(),
-                                                   this.numberWordsSpinner.getValue());
-                        } else {
-                            this.displayError(STOPWORDS_FILE_ERROR_MSG);
-                        }
+        this.filesDirectoryPath = Optional.empty();
+        this.stopwordsFilePath = Optional.empty();
+        try {
+            final FXMLLoader loader = new FXMLLoader(ClassLoader.getSystemResource(FXML_FILENAME));
+            loader.setController(this);
+            final BorderPane borderPane = loader.load();
+            this.setFilesDirectoryControls();
+            this.setStopwordsFileControls();
+            this.startButton.setOnMouseClicked(e -> {
+                if (this.filesDirectoryPath.isPresent()) {
+                    if (this.stopwordsFilePath.isPresent()) {
+                        this.startButton.setDisable(true);
+                        this.suspendButton.setDisable(false);
+                        this.controller.launch(this.filesDirectoryPath.get(),
+                                               this.stopwordsFilePath.get(),
+                                               this.numberWordsSpinner.getValue());
                     } else {
-                        this.displayError(PDFS_FOLDER_ERROR_MSG);
+                        this.displayError(STOPWORDS_FILE_ERROR_MSG);
                     }
-                });
-                this.suspendButton.setOnMouseClicked(e -> {
-                    //TODO: switch to resume behavior
+                } else {
+                    this.displayError(PDFS_FOLDER_ERROR_MSG);
+                }
+            });
+            this.suspendButton.setOnMouseClicked(e -> {
+                if (this.isSuspended) {
+                    this.suspendButton.setText(SUSPEND_BUTTON_TEXT);
+                    this.controller.resume();
+                } else {
                     this.controller.suspend();
-                });
-                this.resetButton.setOnMouseClicked(e -> {
-                    this.barChart.getData().clear();
-                    this.processedWordsLabel.setText(String.format(PROCESSED_WORDS_LABEL_MSG, 0));
-                    this.stopwordsFileLabel.setText(FILE_NOT_CHOSEN_TEXT);
-                    this.filesDirectoryLabel.setText(FILE_NOT_CHOSEN_TEXT);
-                    this.startButton.setDisable(false);
-                    this.suspendButton.setDisable(true);
-                    this.resetButton.setDisable(true);
-                });
-                final Scene scene = new Scene(borderPane);
-                this.primaryStage.setScene(scene);
-                this.primaryStage.sizeToScene();
-                this.primaryStage.setTitle(APP_TITLE);
-                this.primaryStage.show();
-                this.primaryStage.centerOnScreen();
-                this.primaryStage.setMinWidth(this.primaryStage.getWidth());
-                this.primaryStage.setMinHeight(this.primaryStage.getHeight());
-            } catch (final IOException ex) {
-                this.displayError(String.format(FXML_FILE_ERROR_MSG, ex.getMessage()));
-            }
-        });
+                    this.suspendButton.setText(RESUME_BUTTON_TEXT);
+                }
+                this.isSuspended = !this.isSuspended;
+            });
+            this.resetButton.setOnMouseClicked(e -> {
+                this.barChart.getData().clear();
+                this.processedWordsLabel.setText(String.format(PROCESSED_WORDS_LABEL_MSG, 0));
+                this.stopwordsFileLabel.setText(FILE_NOT_CHOSEN_TEXT);
+                this.filesDirectoryLabel.setText(FILE_NOT_CHOSEN_TEXT);
+                this.startButton.setDisable(false);
+                this.suspendButton.setDisable(true);
+                this.resetButton.setDisable(true);
+            });
+            final Scene scene = new Scene(borderPane);
+            this.primaryStage.setScene(scene);
+            this.primaryStage.sizeToScene();
+            this.primaryStage.setTitle(APP_TITLE);
+            this.primaryStage.setOnCloseRequest(e -> this.controller.exit());
+            this.primaryStage.show();
+            this.primaryStage.centerOnScreen();
+            this.primaryStage.setMinWidth(this.primaryStage.getWidth());
+            this.primaryStage.setMinHeight(this.primaryStage.getHeight());
+        } catch (final IOException ex) {
+            this.displayError(String.format(FXML_FILE_ERROR_MSG, ex.getMessage()));
+        }
     }
 
     private void setFilesDirectoryControls() {

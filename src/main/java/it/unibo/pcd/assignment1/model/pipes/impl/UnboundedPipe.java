@@ -79,11 +79,10 @@ public class UnboundedPipe<E> implements Pipe<E> {
     }
 
     protected int getSize() {
-        this.lock.lock();
-        try {
-             return this.queue.size();
-        } finally {
-            this.lock.unlock();
-        }
+        return this.queue.size();
+    }
+
+    protected Lock getLock() {
+        return this.lock;
     }
 }
