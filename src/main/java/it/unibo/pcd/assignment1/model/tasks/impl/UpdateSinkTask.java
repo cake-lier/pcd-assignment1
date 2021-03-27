@@ -35,16 +35,17 @@ public class UpdateSinkTask extends AbstractTask {
             this.initialTime = Optional.of(System.currentTimeMillis());
         }
         final Optional<Update> update = this.wordCounter.dequeue();
-        final long currentTime = System.currentTimeMillis();
         if (!update.isPresent()) {
             return false;
         }
-        if (currentTime - this.initialTime.get() < MILLIS_BETWEEN_FRAMES) {
-            Thread.sleep(currentTime - this.initialTime.get());
+        final long timeRemaining = MILLIS_BETWEEN_FRAMES - (System.currentTimeMillis() - this.initialTime.get());
+        if (timeRemaining > 0) {
+            Thread.sleep(timeRemaining);
             this.updatesSink.accept(this.wordCounter.drain().orElseGet(update::get));
         } else {
             this.updatesSink.accept(update.get());
         }
+        this.initialTime = Optional.empty();
         return true;
     }
 
