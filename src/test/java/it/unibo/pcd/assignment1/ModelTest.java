@@ -1,7 +1,5 @@
 package it.unibo.pcd.assignment1;
 
-import it.unibo.pcd.assignment1.controller.Controller;
-import it.unibo.pcd.assignment1.controller.impl.ControllerImpl;
 import it.unibo.pcd.assignment1.model.updates.Update;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;

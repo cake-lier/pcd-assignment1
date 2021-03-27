@@ -1,4 +1,4 @@
-package it.unibo.pcd.assignment1.controller.agents;
+package it.unibo.pcd.assignment1.model.shared;
 
 public interface AgentSuspendedFlag {
     void check();

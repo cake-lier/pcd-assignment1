@@ -1,45 +1,40 @@
 package it.unibo.pcd.assignment1.model.tasks.impl;
 
-import it.unibo.pcd.assignment1.controller.agents.AgentSuspendedFlag;
-import it.unibo.pcd.assignment1.controller.agents.AgentTicketManager;
-import it.unibo.pcd.assignment1.model.tasks.Task;
+import it.unibo.pcd.assignment1.model.shared.AgentSuspendedFlag;
+import it.unibo.pcd.assignment1.model.tasks.TaskCounter;
+import it.unibo.pcd.assignment1.controller.agents.Task;
 
 import java.util.Objects;
 
-public abstract class AbstractTask implements Task {
+abstract class AbstractTask implements Task {
     private final AgentSuspendedFlag suspendedFlag;
-    private final AgentTicketManager ticketManager;
+    private final TaskCounter taskCounter;
 
-    public AbstractTask(final AgentSuspendedFlag suspendedFlag, final AgentTicketManager ticketManager) {
+    protected AbstractTask(final AgentSuspendedFlag suspendedFlag, final TaskCounter taskCounter) {
         this.suspendedFlag = Objects.requireNonNull(suspendedFlag);
-        this.ticketManager = Objects.requireNonNull(ticketManager);
+        this.taskCounter = Objects.requireNonNull(taskCounter);
     }
 
     @Override
     public final void run() throws Exception {
-        this.ticketManager.incrementAgentOfType(this.getClass());
-        while (true) {
+        this.taskCounter.incrementOfType(this.getClass());
+        do {
             this.suspendedFlag.check();
-            final boolean runAgain = this.doAction();
-            if(!runAgain){
-                break;
-            }
-        }
-        this.onEnd();
-    }
-
-    @Override
-    public final void onEnd() throws Exception {
-        if(this.ticketManager.decrementAgentOfType(this.getClass())){
+        } while (this.doRun());
+        if (this.taskCounter.decrementOfType(this.getClass())) {
             this.doEnd();
         }
     }
 
-    abstract protected boolean doAction() throws Exception;
-    abstract protected void doEnd();
+    protected abstract boolean doRun() throws Exception;
+
+    protected abstract void doEnd();
 
     protected AgentSuspendedFlag getSuspendedFlag() {
         return this.suspendedFlag;
     }
-    protected AgentTicketManager getTicketManager() { return  this.ticketManager;}
+
+    protected TaskCounter getTaskCounter() {
+        return this.taskCounter;
+    }
 }

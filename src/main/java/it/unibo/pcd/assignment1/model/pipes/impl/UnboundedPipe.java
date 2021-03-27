@@ -10,6 +10,7 @@ import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
+//TODO: delete when sure
 public class UnboundedPipe<E> implements Pipe<E> {
     private static final String EXCEPTION_MESSAGE = "It's not possible to add values to a closed pipe";
 
@@ -77,7 +78,12 @@ public class UnboundedPipe<E> implements Pipe<E> {
         this.queue.add(Objects.requireNonNull(value));
     }
 
-    protected synchronized int getSize(){
-        return this.queue.size();
+    protected int getSize() {
+        this.lock.lock();
+        try {
+             return this.queue.size();
+        } finally {
+            this.lock.unlock();
+        }
     }
 }

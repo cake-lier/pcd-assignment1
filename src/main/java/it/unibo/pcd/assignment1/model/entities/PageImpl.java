@@ -1,4 +1,4 @@
-package it.unibo.pcd.assignment1.wrapper;
+package it.unibo.pcd.assignment1.model.entities;
 import java.util.Objects;
 
 public class PageImpl implements Page {
@@ -7,6 +7,7 @@ public class PageImpl implements Page {
     public PageImpl(final String text) {
         this.text = text;
     }
+
     @Override
     public String getText() {
         return this.text;
@@ -26,12 +27,11 @@ public class PageImpl implements Page {
 
     @Override
     public int hashCode() {
-        return Objects.hash(this.getText());
+        return Objects.hash(this.text);
     }
 
     @Override
     public String toString() {
-        return "PageImpl{text=" + this.getText() + '}';
+        return "PageImpl{text=" + this.text + '}';
     }
-
 }

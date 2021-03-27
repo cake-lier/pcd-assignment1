@@ -1,41 +1,42 @@
-package it.unibo.pcd.assignment1.controller.agents.impl;
+package it.unibo.pcd.assignment1.model.tasks.impl;
 
-import it.unibo.pcd.assignment1.controller.agents.AgentTicketManager;
+import it.unibo.pcd.assignment1.model.tasks.TaskCounter;
+import it.unibo.pcd.assignment1.controller.agents.Task;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.locks.ReentrantLock;
 
-public class AgentTicketManagerImpl implements AgentTicketManager {
+public class TaskCounterImpl implements TaskCounter {
     private static final int INCREMENT = 1;
     private static final int DECREMENT = -1;
 
-    private final Map<Class<?>,Integer> counters;
+    private final Map<Class<? extends Task>, Integer> counters;
     private final ReentrantLock lock;
 
-    public AgentTicketManagerImpl() {
+    public TaskCounterImpl() {
         this.counters = new HashMap<>();
         this.lock = new ReentrantLock();
     }
 
     @Override
-    public void incrementAgentOfType(Class<?> klass) {
+    public void incrementOfType(final Class<? extends Task> klass) {
         this.lock.lock();
         try {
-            this.counters.merge(klass,INCREMENT, Integer::sum);
+            this.counters.merge(klass, INCREMENT, Integer::sum);
         } finally {
             this.lock.unlock();
         }
     }
 
     @Override
-    public boolean decrementAgentOfType(Class<?> klass) {
+    public boolean decrementOfType(final Class<? extends Task> klass) {
         this.lock.lock();
-        try{
-            if(!this.counters.containsKey(klass) || this.counters.get(klass) < 0){
+        try {
+            if (!this.counters.containsKey(klass) || this.counters.get(klass) < 0) {
                 throw new IllegalStateException();
             }
-            this.counters.merge(klass,DECREMENT, Integer::sum);
+            this.counters.merge(klass, DECREMENT, Integer::sum);
             return this.counters.get(klass) == 0;
         } finally {
             this.lock.unlock();

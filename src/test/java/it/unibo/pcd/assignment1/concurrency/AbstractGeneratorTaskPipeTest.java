@@ -11,7 +11,7 @@ import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public abstract class AbstractGeneratorPipeTest {
+public abstract class AbstractGeneratorTaskPipeTest {
     private static final int SUPPORT_DATA_LENGTH = 30;
     private static final int SLEEP_MILLISECONDS = 1000;
     private static final int SINGLE_INT_VALUE = 0;

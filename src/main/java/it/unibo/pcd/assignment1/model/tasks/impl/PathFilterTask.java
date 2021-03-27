@@ -1,22 +1,24 @@
 package it.unibo.pcd.assignment1.model.tasks.impl;
 
-import it.unibo.pcd.assignment1.controller.agents.AgentSuspendedFlag;
-import it.unibo.pcd.assignment1.controller.agents.AgentTicketManager;
+import it.unibo.pcd.assignment1.model.shared.AgentSuspendedFlag;
+import it.unibo.pcd.assignment1.model.tasks.TaskCounter;
 import it.unibo.pcd.assignment1.model.pipes.Pipe;
-import it.unibo.pcd.assignment1.wrapper.Document;
+import it.unibo.pcd.assignment1.model.entities.DocumentImpl;
 import org.apache.pdfbox.pdmodel.PDDocument;
 
 import java.io.IOException;
 import java.nio.file.Path;
 
-public class PathFilterTask extends AbstractSingletonFilterTask<Path, Document> {
-    public PathFilterTask(final Pipe<Path> pathPipe, final Pipe<Document> documentPipe, final AgentSuspendedFlag agentState, final AgentTicketManager ticketManager) {
-        super(pathPipe,documentPipe, agentState,ticketManager);
+class PathFilterTask extends AbstractSingletonFilterTask<Path, DocumentImpl> {
+    protected PathFilterTask(final Pipe<Path> pathPipe,
+                             final Pipe<DocumentImpl> documentPipe,
+                             final AgentSuspendedFlag agentState,
+                             final TaskCounter taskCounter) {
+        super(pathPipe, documentPipe, agentState, taskCounter);
     }
 
     @Override
-    protected Document transformSingleton(final Path path) throws IOException {
-        return new Document(PDDocument.load(path.toFile()));
+    protected DocumentImpl transformSingleton(final Path path) throws IOException {
+        return new DocumentImpl(PDDocument.load(path.toFile()));
     }
-
 }

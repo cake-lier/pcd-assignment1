@@ -1,6 +1,6 @@
-package it.unibo.pcd.assignment1.controller.agents.impl;
+package it.unibo.pcd.assignment1.model.shared.impl;
 
-import it.unibo.pcd.assignment1.controller.agents.AgentSuspendedFlag;
+import it.unibo.pcd.assignment1.model.shared.AgentSuspendedFlag;
 
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;
