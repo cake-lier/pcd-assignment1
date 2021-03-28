@@ -26,12 +26,3 @@ tasks.test {
         events("passed", "skipped", "failed")
     }
 }
-
-//TODO: delete when tests are fixed
-sourceSets {
-    test {
-        java {
-            exclude("it/unibo/pcd/assignment1/**")
-        }
-    }
-}

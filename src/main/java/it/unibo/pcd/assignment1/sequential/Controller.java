@@ -44,7 +44,6 @@ public class Controller {
                           .collect(Collectors.groupingBy(s -> s, Collectors.counting()))
                           .forEach((k, v) -> frequencies.merge(k, v, Long::sum));
                     processedWords += words.length;
-                    this.view.displayProgress();
                 }
                 pdfDocument.close();
             }
