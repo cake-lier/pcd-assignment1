@@ -30,6 +30,11 @@ class PathGeneratorTask extends AbstractTask {
     }
 
     @Override
+    public String toString() {
+        return "PathGeneratorTask";
+    }
+
+    @Override
     protected boolean doRun() throws Exception {
         this.stopwords.set(Files.readAllLines(this.stopwordsFile));
         Files.list(this.filesDirectory)

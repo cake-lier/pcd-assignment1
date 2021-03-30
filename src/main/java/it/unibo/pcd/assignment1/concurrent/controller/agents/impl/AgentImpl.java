@@ -12,6 +12,7 @@ public class AgentImpl extends Thread implements Agent {
     private final Consumer<Exception> exceptionHandler;
 
     public AgentImpl(final List<Task> tasks, final Consumer<Exception> exceptionHandler) {
+        super(tasks.get(0).toString());
         this.tasks = Objects.requireNonNull(tasks);
         this.exceptionHandler = Objects.requireNonNull(exceptionHandler);
     }
@@ -30,23 +31,6 @@ public class AgentImpl extends Thread implements Agent {
     @Override
     public void go() {
         this.start();
-    }
-
-    @Override
-    public boolean equals(final Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || this.getClass() != o.getClass()) {
-            return false;
-        }
-        final AgentImpl agent = (AgentImpl) o;
-        return this.tasks.equals(agent.tasks) && this.exceptionHandler.equals(agent.exceptionHandler);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(this.tasks, this.exceptionHandler);
     }
 
     @Override

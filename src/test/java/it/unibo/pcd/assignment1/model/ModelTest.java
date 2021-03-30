@@ -1,4 +1,4 @@
-package it.unibo.pcd.assignment1;
+package it.unibo.pcd.assignment1.model;
 
 import it.unibo.pcd.assignment1.concurrent.controller.agents.Agent;
 import it.unibo.pcd.assignment1.concurrent.controller.agents.impl.AgentImpl;
@@ -26,8 +26,7 @@ import java.util.stream.Stream;
 public class ModelTest implements View {
     private static final int PIPES_SIZE = 100;
     private static final int WORDS_NUMBER = 5;
-    private static final int TOTAL_THREADS = Runtime.getRuntime().availableProcessors() + 1;
-    //TODO: use formula Ncpu * Ucpu * (1 + w/c)
+    private static final int TOTAL_THREADS = Math.round(Runtime.getRuntime().availableProcessors() * 1.0f * (1 + 1.093f));
     private static final String PDFS_FOLDER_NAME = "pdfs";
     private static final String STOPWORDS_FILE_NAME = "stopwords.txt";
 

@@ -1,5 +1,5 @@
 package it.unibo.pcd.assignment1.concurrent.main;
-import it.unibo.pcd.assignment1.concurrent.view.console.ConsoleView;
+import it.unibo.pcd.assignment1.concurrent.view.impl.ConsoleView;
 
 import java.util.Arrays;
 

@@ -11,7 +11,7 @@ public class BoundedPipe<E> implements Pipe<E> {
     private static final String EXCEPTION_MESSAGE = "It's not possible to add values to a closed pipe";
 
     private final Queue<E> queue;
-    protected final Lock lock;
+    private final Lock lock;
     private final Condition notEmpty;
     private final Condition notFull;
     private final int maxElementsNumber;

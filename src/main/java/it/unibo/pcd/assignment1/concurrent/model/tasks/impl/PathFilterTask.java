@@ -19,6 +19,11 @@ class PathFilterTask extends AbstractSingletonFilterTask<Path, Document> {
     }
 
     @Override
+    public String toString() {
+        return "PathFilterTask";
+    }
+
+    @Override
     protected Document transformSingleton(final Path path) throws IOException {
         return new DocumentImpl(PDDocument.load(path.toFile()));
     }

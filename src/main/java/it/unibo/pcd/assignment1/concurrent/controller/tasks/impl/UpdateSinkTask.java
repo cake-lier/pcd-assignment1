@@ -49,6 +49,11 @@ public class UpdateSinkTask extends AbstractTask {
     }
 
     @Override
+    public String toString() {
+        return "UpdateSinkTask";
+    }
+
+    @Override
     protected void doEnd() {
         this.view.displayCompletion();
     }

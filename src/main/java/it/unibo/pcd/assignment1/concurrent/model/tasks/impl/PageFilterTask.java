@@ -28,6 +28,11 @@ class PageFilterTask extends AbstractSingletonFilterTask<Page, Update> {
     }
 
     @Override
+    public String toString() {
+        return "PageFilterTask";
+    }
+
+    @Override
     protected Update transformSingleton(final Page page) {
         final String[] words = Pattern.compile("\\W+").split(page.getText());
         final Set<String> stopwordsSet = this.stopwords.get();

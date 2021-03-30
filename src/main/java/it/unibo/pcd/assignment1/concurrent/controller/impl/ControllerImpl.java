@@ -24,8 +24,7 @@ import java.util.stream.Stream;
 
 public class ControllerImpl implements Controller {
     private static final int PIPES_SIZE = 100;
-    private static final int TOTAL_THREADS = Runtime.getRuntime().availableProcessors() + 1;
-    //TODO: use formula Ncpu * Ucpu * (1 + w/c)
+    private static final int TOTAL_THREADS = Math.round(Runtime.getRuntime().availableProcessors() * 1.0f * (1 + 1.093f));
 
     private final View view;
     private final AgentSuspendedFlag suspendedFlag;

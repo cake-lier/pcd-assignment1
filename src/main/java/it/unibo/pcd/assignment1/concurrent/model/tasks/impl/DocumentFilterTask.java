@@ -22,6 +22,11 @@ class DocumentFilterTask extends AbstractFilterTask<Document, Page> {
     }
 
     @Override
+    public String toString() {
+        return "DocumentFilterTask";
+    }
+
+    @Override
     protected List<Page> transform(final Document document) throws IOException {
         final PDFTextStripper stripper = new PDFTextStripper();
         final PDDocument pdfDocument = document.getInternalDocument();

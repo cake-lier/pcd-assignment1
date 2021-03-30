@@ -1,4 +1,4 @@
-package it.unibo.pcd.assignment1.concurrent.view.gui;
+package it.unibo.pcd.assignment1.concurrent.view.impl;
 
 import it.unibo.pcd.assignment1.concurrent.controller.Controller;
 import it.unibo.pcd.assignment1.concurrent.controller.impl.ControllerImpl;

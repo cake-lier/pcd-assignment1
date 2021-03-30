@@ -1,6 +1,6 @@
 package it.unibo.pcd.assignment1.concurrent.main;
 
-import it.unibo.pcd.assignment1.concurrent.view.gui.GUIView;
+import it.unibo.pcd.assignment1.concurrent.view.impl.GUIView;
 import javafx.application.Application;
 import javafx.stage.Stage;
 
