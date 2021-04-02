@@ -51,7 +51,7 @@ public class ControllerImpl implements Controller {
                                               this.exceptionHandler)),
                       Stream.generate(() -> Arrays.asList(FilterTaskTypes.values()))
                             .flatMap(List::stream)
-                            .limit(Math.max(TOTAL_THREADS - 2, FilterTaskTypes.values().length))
+                            .limit(TOTAL_THREADS - 2)
                             .map(t -> new AgentImpl(taskListFactory.createForFilterAgent(t), this.exceptionHandler)))
               .forEach(Agent::go);
     }
