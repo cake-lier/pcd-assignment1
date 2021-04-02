@@ -28,26 +28,26 @@ public class ControllerImpl implements Controller {
 
     private final View view;
     private final AgentSuspendedFlag suspendedFlag;
-    private final TaskCounter taskCounter;
     private final Consumer<Exception> exceptionHandler;
 
     public ControllerImpl(final View view) {
         this.view = Objects.requireNonNull(view);
         this.suspendedFlag = new AgentSuspendedFlagImpl();
-        this.taskCounter = new TaskCounterImpl();
         this.exceptionHandler = e -> this.view.displayError(e.getMessage());
     }
 
     @Override
     public void launch(final Path filesDirectory, final Path stopwordsFile, final int wordsNumber) {
+        this.suspendedFlag.setRunning();
+        final TaskCounter taskCounter = new TaskCounterImpl();
         final WordCounter updates = new WordCounterImpl(PIPES_SIZE, wordsNumber);
-        final TaskListFactory taskListFactory = new TaskListFactory(PIPES_SIZE, updates, this.suspendedFlag, this.taskCounter);
+        final TaskListFactory taskListFactory = new TaskListFactory(PIPES_SIZE, updates, this.suspendedFlag, taskCounter);
         Stream.concat(Stream.of(new AgentImpl(taskListFactory.createForGeneratorAgent(filesDirectory, stopwordsFile),
                                               this.exceptionHandler),
                                 new AgentImpl(Collections.singletonList(new UpdateSinkTask(updates,
                                                                                            this.view,
                                                                                            this.suspendedFlag,
-                                                                                           this.taskCounter)),
+                                                                                           taskCounter)),
                                               this.exceptionHandler)),
                       Stream.generate(() -> Arrays.asList(FilterTaskTypes.values()))
                             .flatMap(List::stream)
