@@ -1,9 +1,10 @@
 package it.unibo.pcd.assignment1.concurrent.view.impl;
 
+import it.unibo.pcd.assignment1.ChronometerImpl;
 import it.unibo.pcd.assignment1.concurrent.controller.Controller;
 import it.unibo.pcd.assignment1.concurrent.controller.impl.ControllerImpl;
 import it.unibo.pcd.assignment1.concurrent.view.View;
-import it.unibo.pcd.assignment1.sequential.Chronometer;
+import it.unibo.pcd.assignment1.Chronometer;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -43,7 +44,7 @@ public class ConsoleView implements View {
                                     .filter(a -> a.size() > 3)
                                     .map(a -> Boolean.parseBoolean(a.get(3)))
                                     .orElse(false);
-        this.chronometer = new Chronometer();
+        this.chronometer = new ChronometerImpl();
         this.show();
     }
 

@@ -1,5 +1,8 @@
 package it.unibo.pcd.assignment1.sequential;
 
+import it.unibo.pcd.assignment1.Chronometer;
+import it.unibo.pcd.assignment1.ChronometerImpl;
+
 import java.nio.file.Paths;
 import java.util.List;
 import java.util.Map;
@@ -22,7 +25,7 @@ public class View {
             System.err.println(NOT_ENOUGH_ARGUMENTS_ERROR);
             controller.exit();
         }
-        this.chronometer = new Chronometer();
+        this.chronometer = new ChronometerImpl();
         this.chronometer.start();
         controller.launch(Paths.get(arguments.get(0)), Paths.get(arguments.get(2)), Integer.parseInt(arguments.get(1)));
     }
