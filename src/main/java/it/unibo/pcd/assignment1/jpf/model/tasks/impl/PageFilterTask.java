@@ -4,15 +4,9 @@ import it.unibo.pcd.assignment1.jpf.model.entities.Page;
 import it.unibo.pcd.assignment1.jpf.model.entities.Update;
 import it.unibo.pcd.assignment1.jpf.model.entities.impl.UpdateImpl;
 import it.unibo.pcd.assignment1.jpf.model.pipes.Pipe;
-import it.unibo.pcd.assignment1.jpf.model.shared.AgentSuspendedFlag;
-import it.unibo.pcd.assignment1.jpf.model.shared.StopwordsSet;
 import it.unibo.pcd.assignment1.jpf.model.tasks.TaskCounter;
 
 import java.util.*;
-import java.util.function.Function;
-import java.util.regex.Pattern;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 public class PageFilterTask extends AbstractSingletonFilterTask<Page, Update> {
 
@@ -23,7 +17,7 @@ public class PageFilterTask extends AbstractSingletonFilterTask<Page, Update> {
     }
 
     @Override
-    protected Update transformSingleton(final Page page) {
+    protected Update transformSingleton() {
         return new UpdateImpl(Collections.singletonMap("word", 1L),2);
     }
 }

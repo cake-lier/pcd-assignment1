@@ -2,7 +2,6 @@ package it.unibo.pcd.assignment1.jpf.model.tasks.impl;
 
 import it.unibo.pcd.assignment1.jpf.controller.tasks.impl.AbstractTask;
 import it.unibo.pcd.assignment1.jpf.model.pipes.Pipe;
-import it.unibo.pcd.assignment1.jpf.model.shared.AgentSuspendedFlag;
 import it.unibo.pcd.assignment1.jpf.model.tasks.TaskCounter;
 
 import java.util.Objects;
@@ -25,9 +24,7 @@ abstract class AbstractFilterTask<I, O> extends AbstractTask {
         final Optional<I> input = this.inputPipe.dequeue();
         if (input.isPresent()) {
             this.transform(input.get())
-                .forEach(o -> {
-                    this.outputPipe.enqueue(o);
-                });
+                .forEach(o -> this.outputPipe.enqueue(o));
         }
         return input.isPresent();
     }

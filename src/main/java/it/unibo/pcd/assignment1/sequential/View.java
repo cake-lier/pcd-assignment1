@@ -13,7 +13,7 @@ public class View {
     private static final String FREQUENCIES_TITLE = "The %d most frequent words:\n";
     private static final String FREQUENCIES_LINE = "- %s: %d\n";
     private static final String PROCESSED_WORDS_TITLE = "\nTotal processed words:\n- %d\n";
-    private static final String ERROR_MSG_PREFIX = "An error has occured: %s\n";
+    private static final String ERROR_MSG_PREFIX = "An error has occurred: %s\n";
     private static final String ELAPSED_TIME_TITLE = "\nElapsed time: %f\n";
     private static final String END_MESSAGE = "\n--- End ---";
 

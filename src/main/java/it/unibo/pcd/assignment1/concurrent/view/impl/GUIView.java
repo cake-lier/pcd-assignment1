@@ -26,7 +26,7 @@ import java.util.Optional;
 public class GUIView implements View {
     private static final String STOPWORDS_FILE_ERROR_MSG = "Select a file containing the stopwords";
     private static final String PDFS_FOLDER_ERROR_MSG = "Select a folder for your PDF files";
-    private static final String FXML_FILE_ERROR_MSG = "An error occured while loading configuration files: %s";
+    private static final String FXML_FILE_ERROR_MSG = "An error occurred while loading configuration files: %s";
     private static final String APP_TITLE = "Unique words counter";
     private static final String FXML_FILENAME = "main.fxml";
     private static final String PROCESSED_WORDS_LABEL_MSG = "Processed words: %d";

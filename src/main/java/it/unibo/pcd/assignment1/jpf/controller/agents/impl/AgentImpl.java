@@ -5,7 +5,6 @@ import it.unibo.pcd.assignment1.jpf.controller.tasks.Task;
 
 import java.util.List;
 import java.util.Objects;
-import java.util.function.Consumer;
 
 public class AgentImpl extends Thread implements Agent {
     private final List<Task> tasks;
@@ -45,6 +44,6 @@ public class AgentImpl extends Thread implements Agent {
 
     @Override
     public String toString() {
-        return "AgentImpl{tasks=" + this.tasks+"}";
+        return "AgentImpl{tasks=" + this.tasks + "}";
     }
 }

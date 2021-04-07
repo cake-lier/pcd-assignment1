@@ -1,7 +1,6 @@
 package it.unibo.pcd.assignment1.jpf.controller.tasks.impl;
 
 import it.unibo.pcd.assignment1.jpf.controller.tasks.Task;
-import it.unibo.pcd.assignment1.jpf.model.shared.AgentSuspendedFlag;
 import it.unibo.pcd.assignment1.jpf.model.tasks.TaskCounter;
 
 import java.util.Objects;

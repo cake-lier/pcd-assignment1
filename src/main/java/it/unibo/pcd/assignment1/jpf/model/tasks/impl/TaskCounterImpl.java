@@ -23,7 +23,7 @@ public class TaskCounterImpl implements TaskCounter {
     public void incrementOfType(final Class<? extends Task> klass) {
         this.lock.lock();
         try {
-            this.counters.merge(klass, INCREMENT,(old,nevv)->old+nevv);
+            this.counters.merge(klass, INCREMENT, (o, n)-> o + n);
         } finally {
             this.lock.unlock();
         }
@@ -36,7 +36,7 @@ public class TaskCounterImpl implements TaskCounter {
             if (!this.counters.containsKey(klass) || this.counters.get(klass) < 0) {
                 throw new IllegalStateException();
             }
-            this.counters.merge(klass, DECREMENT, (old,nevv)->old+nevv);
+            this.counters.merge(klass, DECREMENT, (o, n)-> o + n);
             return this.counters.get(klass) == 0;
         } finally {
             this.lock.unlock();
