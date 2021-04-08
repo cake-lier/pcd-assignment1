@@ -15,7 +15,11 @@ public abstract class AbstractTask implements Task {
     @Override
     public final void run() {
         this.taskCounter.incrementOfType(this.getClass());
-        while (this.doRun());
+        while (true){
+            if(!this.doRun()){
+                break;
+            }
+        }
         if (this.taskCounter.decrementOfType(this.getClass())) {
             this.doEnd();
         }

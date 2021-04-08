@@ -16,9 +16,9 @@ abstract class AbstractSingletonFilterTask<I, O> extends AbstractFilterTask<I, O
     @Override
     protected Iterable<O> transform(final I input){
         List<O> list = new ArrayList<>();
-        list.add(this.transformSingleton());
+        list.add(this.transformSingleton(input));
         return list;
     }
 
-    protected abstract O transformSingleton();
+    protected abstract O transformSingleton(I input);
 }

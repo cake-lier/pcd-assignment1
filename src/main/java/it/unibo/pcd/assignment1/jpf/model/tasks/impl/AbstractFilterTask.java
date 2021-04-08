@@ -19,6 +19,7 @@ abstract class AbstractFilterTask<I, O> extends AbstractTask {
         this.outputPipe = Objects.requireNonNull(outputPipe);
     }
 
+    @SuppressWarnings({"Convert2MethodRef", "OptionalIsPresent"})
     @Override
     protected boolean doRun(){
         final Optional<I> input = this.inputPipe.dequeue();

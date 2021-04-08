@@ -1,6 +1,5 @@
 package it.unibo.pcd.assignment1.concurrent.model.tasks.impl;
 
-import it.unibo.pcd.assignment1.concurrent.model.entities.Document;
 import it.unibo.pcd.assignment1.concurrent.model.pipes.Pipe;
 import it.unibo.pcd.assignment1.concurrent.model.shared.AgentSuspendedFlag;
 import it.unibo.pcd.assignment1.concurrent.model.shared.StopwordsSet;
@@ -9,7 +8,6 @@ import it.unibo.pcd.assignment1.concurrent.model.entities.Update;
 import it.unibo.pcd.assignment1.concurrent.model.entities.impl.UpdateImpl;
 import it.unibo.pcd.assignment1.concurrent.model.entities.Page;
 
-import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.Objects;
 import java.util.Set;

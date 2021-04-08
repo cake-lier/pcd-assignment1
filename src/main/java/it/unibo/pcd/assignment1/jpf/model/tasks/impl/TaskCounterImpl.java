@@ -19,16 +19,18 @@ public class TaskCounterImpl implements TaskCounter {
         this.lock = new ReentrantLock();
     }
 
+    @SuppressWarnings("Convert2MethodRef")
     @Override
     public void incrementOfType(final Class<? extends Task> klass) {
         this.lock.lock();
         try {
-            this.counters.merge(klass, INCREMENT, (o, n)-> o + n);
+            this.counters.merge(klass, INCREMENT, (o, n) -> o + n);
         } finally {
             this.lock.unlock();
         }
     }
 
+    @SuppressWarnings("Convert2MethodRef")
     @Override
     public boolean decrementOfType(final Class<? extends Task> klass) {
         this.lock.lock();
@@ -36,7 +38,7 @@ public class TaskCounterImpl implements TaskCounter {
             if (!this.counters.containsKey(klass) || this.counters.get(klass) < 0) {
                 throw new IllegalStateException();
             }
-            this.counters.merge(klass, DECREMENT, (o, n)-> o + n);
+            this.counters.merge(klass, DECREMENT, (o, n) -> o + n);
             return this.counters.get(klass) == 0;
         } finally {
             this.lock.unlock();
