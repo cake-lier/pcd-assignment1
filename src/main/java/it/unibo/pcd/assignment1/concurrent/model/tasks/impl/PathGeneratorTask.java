@@ -10,12 +10,25 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Objects;
 
+/**
+ * A {@link it.unibo.pcd.assignment1.concurrent.controller.tasks.Task} for generating the inputs of the computation, the
+ * {@link Path}s.
+ */
 class PathGeneratorTask extends AbstractTask {
     private final Path filesDirectory;
     private final Path stopwordsFile;
     private final StopwordsSet stopwords;
     private final Pipe<Path> paths;
 
+    /**
+     * Default constructor.
+     * @param filesDirectory the path of the directory containing the PDF files to process
+     * @param stopwordsFile the path of the file containing the stopwords
+     * @param paths the {@link Pipe} in which enqueueing the generated {@link Path}s
+     * @param suspendedFlag the flag for checking whether the execution should be suspended or not
+     * @param taskCounter the counter to which register for notifying a new task of this type
+     * @param stopwords the {@link StopwordsSet} to populate
+     */
     protected PathGeneratorTask(final Path filesDirectory,
                                 final Path stopwordsFile,
                                 final Pipe<Path> paths,
@@ -29,11 +42,17 @@ class PathGeneratorTask extends AbstractTask {
         this.paths = Objects.requireNonNull(paths);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String toString() {
         return "PathGeneratorTask";
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     protected boolean doRun() throws Exception {
         this.stopwords.set(Files.readAllLines(this.stopwordsFile));
@@ -43,6 +62,9 @@ class PathGeneratorTask extends AbstractTask {
         return false;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     protected void doEnd() {
         this.paths.close();

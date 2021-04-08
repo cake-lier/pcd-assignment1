@@ -22,6 +22,9 @@ import java.util.Objects;
 import java.util.function.Consumer;
 import java.util.stream.Stream;
 
+/**
+ * An implementation of the {@link Controller} interface.
+ */
 public class ControllerImpl implements Controller {
     private static final int PIPES_SIZE = 100;
     private static final int TOTAL_THREADS = Math.round(Runtime.getRuntime().availableProcessors() * 1.0f * (1 + 1.093f));
@@ -30,12 +33,19 @@ public class ControllerImpl implements Controller {
     private final AgentSuspendedFlag suspendedFlag;
     private final Consumer<Exception> exceptionHandler;
 
+    /**
+     * Default constructor.
+     * @param view the View component to be notified by this Controller instance
+     */
     public ControllerImpl(final View view) {
         this.view = Objects.requireNonNull(view);
         this.suspendedFlag = new AgentSuspendedFlagImpl();
         this.exceptionHandler = e -> this.view.displayError(e.getMessage());
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void launch(final Path filesDirectory, final Path stopwordsFile, final int wordsNumber) {
         this.suspendedFlag.setRunning();
@@ -56,16 +66,25 @@ public class ControllerImpl implements Controller {
               .forEach(Agent::go);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void suspend() {
         this.suspendedFlag.setSuspended();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void resume() {
         this.suspendedFlag.setRunning();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void exit() {
         System.exit(0);

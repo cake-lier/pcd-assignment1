@@ -20,6 +20,10 @@ import java.util.Objects;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
+/**
+ * A factory for the lists of {@link Task}s which can be executed by an
+ * {@link it.unibo.pcd.assignment1.concurrent.controller.agents.Agent}.
+ */
 public class TaskListFactory {
     private final Pipe<Path> paths;
     private final Pipe<Document> documents;
@@ -29,6 +33,13 @@ public class TaskListFactory {
     private final TaskCounter taskCounter;
     private final StopwordsSet stopwords;
 
+    /**
+     * Default constructor.
+     * @param pipesSize the size of the {@link Pipe}s to be created
+     * @param updates the special {@link Pipe} for {@link Update}s
+     * @param suspendedFlag the flag for checking whether the execution of a {@link Task} should be suspended or not
+     * @param taskCounter the counter to which register for notifying a {@link Task} has started running or has ended
+     */
     public TaskListFactory(final int pipesSize,
                            final Pipe<Update> updates,
                            final AgentSuspendedFlag suspendedFlag,
@@ -42,6 +53,13 @@ public class TaskListFactory {
         this.stopwords = new StopwordsSetImpl();
     }
 
+    /**
+     * It creates a new list of {@link Task}s for a generic "filter"
+     * {@link it.unibo.pcd.assignment1.concurrent.controller.agents.Agent}.
+     * @param firstTaskType the type of the first {@link Task} to be executed by the agent
+     * @return a new list of {@link Task}s for a generic "filter"
+     * {@link it.unibo.pcd.assignment1.concurrent.controller.agents.Agent}
+     */
     public List<Task> createForFilterAgent(final FilterTaskTypes firstTaskType) {
         return Arrays.<Supplier<Task>>asList(() -> new PathFilterTask(this.paths, this.documents, this.suspendedFlag, this.taskCounter),
                                 () -> new DocumentFilterTask(this.documents, this.pages, this.suspendedFlag, this.taskCounter),
@@ -56,6 +74,13 @@ public class TaskListFactory {
                      .collect(Collectors.toList());
     }
 
+    /**
+     * It creates a new list of {@link Task}s for a "generator"
+     * {@link it.unibo.pcd.assignment1.concurrent.controller.agents.Agent}.
+     * @param filesDirectory the path of the directory containing the PDF files to process
+     * @param stopwordsFile the path of the file containing the stopwords
+     * @return a new list of {@link Task}s for a "generator" {@link it.unibo.pcd.assignment1.concurrent.controller.agents.Agent}
+     */
     public List<Task> createForGeneratorAgent(final Path filesDirectory, final Path stopwordsFile) {
         final List<Task> taskList = new ArrayList<>(this.createForFilterAgent(FilterTaskTypes.PATH));
         taskList.add(0, new PathGeneratorTask(filesDirectory,

@@ -8,12 +8,18 @@ import java.util.Set;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.ReentrantLock;
 
+/**
+ * An implementation of the {@link StopwordsSet} interface.
+ */
 public class StopwordsSetImpl implements StopwordsSet {
     private final Set<String> stopwords;
     private final ReentrantLock lock;
     private final Condition areSet;
     private boolean stopwordsAreSet;
 
+    /**
+     * Default constructor.
+     */
     public StopwordsSetImpl() {
         this.stopwords = new HashSet<>();
         this.lock = new ReentrantLock();
@@ -21,6 +27,9 @@ public class StopwordsSetImpl implements StopwordsSet {
         this.areSet = this.lock.newCondition();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void set(final Collection<String> stopwords) {
         this.lock.lock();
@@ -36,6 +45,9 @@ public class StopwordsSetImpl implements StopwordsSet {
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Set<String> get() {
         this.lock.lock();

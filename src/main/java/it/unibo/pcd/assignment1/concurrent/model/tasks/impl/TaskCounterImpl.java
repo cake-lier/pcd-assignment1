@@ -7,6 +7,9 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.locks.ReentrantLock;
 
+/**
+ * An implementation of the {@link TaskCounter} interface.
+ */
 public class TaskCounterImpl implements TaskCounter {
     private static final int INCREMENT = 1;
     private static final int DECREMENT = -1;
@@ -14,11 +17,17 @@ public class TaskCounterImpl implements TaskCounter {
     private final Map<Class<? extends Task>, Integer> counters;
     private final ReentrantLock lock;
 
+    /**
+     * Default constructor.
+     */
     public TaskCounterImpl() {
         this.counters = new HashMap<>();
         this.lock = new ReentrantLock();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void incrementOfType(final Class<? extends Task> klass) {
         this.lock.lock();
@@ -29,6 +38,9 @@ public class TaskCounterImpl implements TaskCounter {
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public boolean decrementOfType(final Class<? extends Task> klass) {
         this.lock.lock();

@@ -23,6 +23,9 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 
+/**
+ * An implementation of the {@link View} interface which creates a Graphical User Interface using JavaFX.
+ */
 public class GUIView implements View {
     private static final String STOPWORDS_FILE_ERROR_MSG = "Select a file containing the stopwords";
     private static final String PDFS_FOLDER_ERROR_MSG = "Select a folder for your PDF files";
@@ -65,6 +68,10 @@ public class GUIView implements View {
     @FXML
     private Label processedWordsLabel;
 
+    /**
+     * Default constructor.
+     * @param primaryStage the JavaFX stage object in which drawing the scene of the interface
+     */
     public GUIView(final Stage primaryStage) {
         this.controller = new ControllerImpl(this);
         this.primaryStage = Objects.requireNonNull(primaryStage);
@@ -74,6 +81,9 @@ public class GUIView implements View {
         this.show();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void displayProgress(final Map<String, Long> frequencies, final long processedWords) {
         Platform.runLater(() -> {
@@ -90,6 +100,9 @@ public class GUIView implements View {
         });
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void displayCompletion() {
         Platform.runLater(() -> {
@@ -98,11 +111,17 @@ public class GUIView implements View {
         });
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void displayError(final String message) {
         Platform.runLater(() -> new Alert(Alert.AlertType.ERROR, message, ButtonType.OK).showAndWait());
     }
 
+    /*
+     * It completes the GUI initialization and it shows the view to the user.
+     */
     private void show() {
         this.filesDirectoryPath = Optional.empty();
         this.stopwordsFilePath = Optional.empty();
@@ -160,6 +179,9 @@ public class GUIView implements View {
         }
     }
 
+    /*
+     * It sets the group of controls about the PDF directory.
+     */
     private void setFilesDirectoryControls() {
         this.filesDirectoryButton.setOnMouseClicked(e -> {
             final DirectoryChooser directoryChooser = new DirectoryChooser();
@@ -173,6 +195,9 @@ public class GUIView implements View {
         });
     }
 
+    /*
+     * It sets the group of controls about the stopwords file.
+     */
     private void setStopwordsFileControls() {
         this.stopwordsFileButton.setOnMouseClicked(e -> {
             final FileChooser fileChooser = new FileChooser();

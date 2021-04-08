@@ -3,18 +3,31 @@ import it.unibo.pcd.assignment1.concurrent.model.entities.Page;
 
 import java.util.Objects;
 
+/**
+ * An implementation of the {@link Page} interface.
+ */
 public class PageImpl implements Page {
     private final String text;
 
+    /**
+     * Default constructor.
+     * @param text the textual content of this page
+     */
     public PageImpl(final String text) {
         this.text = text;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String getText() {
         return this.text;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public boolean equals(final Object o) {
         if (this == o) {
@@ -27,11 +40,17 @@ public class PageImpl implements Page {
         return this.text.equals(page.getText());
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public int hashCode() {
         return Objects.hash(this.text);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String toString() {
         return "PageImpl{text=" + this.text + '}';

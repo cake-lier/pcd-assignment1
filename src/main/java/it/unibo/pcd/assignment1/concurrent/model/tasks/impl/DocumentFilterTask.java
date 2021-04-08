@@ -10,22 +10,39 @@ import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.text.PDFTextStripper;
 
 import java.io.IOException;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * A {@link it.unibo.pcd.assignment1.concurrent.controller.tasks.Task} for transforming {@link Document}s into {@link Page}s.
+ */
 class DocumentFilterTask extends AbstractFilterTask<Document, Page> {
+    /**
+     * Default constructor.
+     * @param documentPipe the {@link Pipe} from which dequeueing the {@link Document}s to be transformed
+     * @param pagePipe the {@link Pipe} in which enqueueing the transformed {@link Page}s
+     * @param suspendedFlag the flag for checking whether the execution should be suspended or not
+     * @param taskCounter the counter to which register for notifying a new task of this type
+     */
     protected DocumentFilterTask(final Pipe<Document> documentPipe,
                                  final Pipe<Page> pagePipe,
-                                 final AgentSuspendedFlag agentState,
+                                 final AgentSuspendedFlag suspendedFlag,
                                  final TaskCounter taskCounter) {
-        super(agentState, taskCounter, documentPipe, pagePipe);
+        super(suspendedFlag, taskCounter, documentPipe, pagePipe);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String toString() {
         return "DocumentFilterTask";
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     protected List<Page> transform(final Document document) throws IOException {
         final PDFTextStripper stripper = new PDFTextStripper();

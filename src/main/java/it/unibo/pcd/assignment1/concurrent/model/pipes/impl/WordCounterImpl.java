@@ -7,17 +7,28 @@ import it.unibo.pcd.assignment1.concurrent.model.entities.impl.UpdateImpl;
 import java.util.*;
 import java.util.stream.Collectors;
 
+/**
+ * An implementation of the {@link WordCounter} interface.
+ */
 public class WordCounterImpl extends BoundedPipe<Update> implements WordCounter {
     private final int wordsNumber;
     private final Map<String, Long> frequencies;
     private int processedWords;
 
+    /**
+     * Default constructor.
+     * @param maxNumberOfElements the maximum number of elements this pipe can hold at the same time
+     * @param wordsNumber the maximum number of most frequent words an {@link Update} should show
+     */
     public WordCounterImpl(final int maxNumberOfElements, final int wordsNumber) {
         super(maxNumberOfElements);
         this.wordsNumber = wordsNumber;
         this.frequencies = new HashMap<>();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     protected void doEnqueue(final Update element) {
         element.getFrequencies().forEach((k, v) -> this.frequencies.merge(k, v, Long::sum));
@@ -33,6 +44,9 @@ public class WordCounterImpl extends BoundedPipe<Update> implements WordCounter 
         ));
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Optional<Update> drain() {
         this.getLock().lock();

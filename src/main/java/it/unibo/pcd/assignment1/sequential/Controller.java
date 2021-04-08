@@ -10,15 +10,31 @@ import java.util.*;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
+/**
+ * The Controller component of the sequential application, it should represent the application itself. That being so, it receives
+ * user input from the View component and notifies it of changes in the Model component state. It should also be capable of
+ * notifying the Model of requests made by the user and receive the adequate response. At last, it should manage the
+ * application state.
+ */
 public class Controller {
     private static final String CANNOT_EXTRACT_TEXT = "You do not have permission to extract text";
 
     private final View view;
 
+    /**
+     * Default constructor.
+     * @param view the View component to be notified by this Controller instance
+     */
     public Controller(final View view) {
         this.view = Objects.requireNonNull(view);
     }
 
+    /**
+     * It launches a new computation with the inputs given.
+     * @param filesDirectory the path of the directory containing the PDF files to process
+     * @param stopwordsFile the path of the file containing the stopwords
+     * @param wordsNumber the number of most frequent words to display
+     */
     public void launch(final Path filesDirectory, final Path stopwordsFile, final int wordsNumber) {
         final Map<String, Long> frequencies = new HashMap<>();
         int processedWords = 0;
@@ -60,6 +76,9 @@ public class Controller {
         }
     }
 
+    /**
+     * It exits the application.
+     */
     public void exit() {
         System.exit(0);
     }

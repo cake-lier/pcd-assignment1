@@ -12,6 +12,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+/**
+ * An implementation of the {@link View} interface which instantiates a Command Line Interface.
+ */
 public class ConsoleView implements View {
     private static final String NOT_ENOUGH_ARGUMENTS_ERROR = "Not enough arguments";
     private static final String APP_TITLE = "\n--- Statistics for given files ---\n";
@@ -31,6 +34,10 @@ public class ConsoleView implements View {
     private long lastProcessedWords;
     private Map<String, Long> lastFrequencies;
 
+    /**
+     * Default constructor.
+     * @param arguments the list of arguments passed to the application at launch
+     */
     public ConsoleView(final List<String> arguments) {
         this.controller = new ControllerImpl(this);
         if (arguments.size() < 3) {
@@ -48,12 +55,18 @@ public class ConsoleView implements View {
         this.show();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void displayProgress(final Map<String, Long> frequencies, final long processedWords) {
         this.lastFrequencies = frequencies;
         this.lastProcessedWords = processedWords;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void displayCompletion() {
         if (this.printTimings) {
@@ -67,11 +80,17 @@ public class ConsoleView implements View {
         System.out.println(END_MESSAGE);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void displayError(final String message) {
         System.err.printf(ERROR_MSG_PREFIX, message);
     }
 
+    /*
+     * It launches the computation.
+     */
     private void show() {
         if (this.printTimings) {
             this.chronometer.start();

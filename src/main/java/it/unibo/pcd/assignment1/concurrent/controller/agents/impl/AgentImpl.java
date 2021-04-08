@@ -7,6 +7,9 @@ import java.util.List;
 import java.util.Objects;
 import java.util.function.Consumer;
 
+/**
+ * An implementation of the {@link Agent} interface using the Java {@link Thread} class.
+ */
 public class AgentImpl extends Thread implements Agent {
     private final List<Task> tasks;
     private final Consumer<Exception> exceptionHandler;
