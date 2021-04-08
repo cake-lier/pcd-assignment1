@@ -1,4 +1,4 @@
-target=it.unibo.pcd.assignment1.ModelTest
+target=it.unibo.pcd.assignment1.jpf.main.JPFTestMain
 listener=gov.nasa.jpf.listener.PreciseRaceDetector
 report.console.property_violation=error,trace
 classpath=build/classes/java/test:build/classes/java/main
