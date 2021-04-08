@@ -8,12 +8,12 @@ import java.util.Objects;
 import java.util.stream.IntStream;
 
 class PathGeneratorTask extends AbstractTask {
+    private static final String FILE_PATH = "file";
+
     private final Pipe<String> paths;
     private final int numberOfPaths;
 
-    protected PathGeneratorTask(final int numberOfPaths,
-                                final Pipe<String> paths,
-                                final TaskCounter taskCounter) {
+    protected PathGeneratorTask(final int numberOfPaths, final Pipe<String> paths, final TaskCounter taskCounter) {
         super(taskCounter);
         this.paths = Objects.requireNonNull(paths);
         this.numberOfPaths = numberOfPaths;
@@ -21,7 +21,7 @@ class PathGeneratorTask extends AbstractTask {
 
     @Override
     protected boolean doRun(){
-        IntStream.rangeClosed(1,this.numberOfPaths).forEach(n->this.paths.enqueue("file"+n));
+        IntStream.rangeClosed(1, this.numberOfPaths).forEach(n -> this.paths.enqueue(FILE_PATH + n));
         return false;
     }
 

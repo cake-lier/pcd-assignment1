@@ -17,7 +17,7 @@ public class UpdateImpl implements Update {
      * @param processedWords the processed words in total at a specific point in time
      */
     public UpdateImpl(final Map<String, Long> frequencies, final long processedWords) {
-        this.frequencies = Collections.unmodifiableMap(new LinkedHashMap<>(frequencies));
+        this.frequencies = Collections.unmodifiableMap(frequencies);
         this.processedWords = processedWords;
     }
 

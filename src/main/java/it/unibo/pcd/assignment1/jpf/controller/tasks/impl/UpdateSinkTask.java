@@ -9,24 +9,26 @@ import java.util.Optional;
 
 public class UpdateSinkTask extends AbstractTask {
     private final WordCounter wordCounter;
-    private final int wordNumberExpectation;
-
-    private long processedWord;
+    private final int expectedWordNumber;
+    private final String expectedWord;
+    private Optional<Update> lastUpdate;
 
     public UpdateSinkTask(final WordCounter wordCounter,
-                          final TaskCounter ticketManager,
-                          final int wordNumberExpectation) {
-        super(ticketManager);
+                          final TaskCounter taskCounter,
+                          final int expectedWordNumber,
+                          final String expectedWord) {
+        super(taskCounter);
         this.wordCounter = Objects.requireNonNull(wordCounter);
-        this.wordNumberExpectation = wordNumberExpectation;
-        this.processedWord = 0;
+        this.expectedWordNumber = expectedWordNumber;
+        this.expectedWord = Objects.requireNonNull(expectedWord);
+        this.lastUpdate = Optional.empty();
     }
 
     @Override
-    protected boolean doRun(){
+    protected boolean doRun() {
         Optional<Update> update = this.wordCounter.dequeue();
-        if(update.isPresent()){
-            this.processedWord = update.get().getProcessedWords();
+        if (update.isPresent()) {
+            this.lastUpdate = update;
             return true;
         }
         return false;
@@ -34,6 +36,11 @@ public class UpdateSinkTask extends AbstractTask {
 
     @Override
     protected void doEnd() {
-        assert this.processedWord == this.wordNumberExpectation;
+        assert this.lastUpdate.isPresent();
+        final Update update = this.lastUpdate.get();
+        assert update.getProcessedWords() == this.expectedWordNumber;
+        assert update.getFrequencies().size() == 1;
+        assert update.getFrequencies().containsKey(this.expectedWord);
+        assert update.getFrequencies().get(this.expectedWord) == this.expectedWordNumber;
     }
 }

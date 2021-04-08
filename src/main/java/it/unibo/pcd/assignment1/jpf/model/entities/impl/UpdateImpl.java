@@ -3,7 +3,6 @@ package it.unibo.pcd.assignment1.jpf.model.entities.impl;
 import it.unibo.pcd.assignment1.jpf.model.entities.Update;
 
 import java.util.Collections;
-import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Objects;
 
@@ -12,7 +11,7 @@ public class UpdateImpl implements Update {
     private final long processedWords;
 
     public UpdateImpl(final Map<String, Long> frequencies, final long processedWords) {
-        this.frequencies = Collections.unmodifiableMap(new LinkedHashMap<>(frequencies));
+        this.frequencies = Collections.unmodifiableMap(frequencies);
         this.processedWords = processedWords;
     }
 

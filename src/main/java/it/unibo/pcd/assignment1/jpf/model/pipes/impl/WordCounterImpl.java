@@ -10,7 +10,6 @@ public class WordCounterImpl extends BoundedPipe<Update> implements WordCounter 
     private final Map<String, Long> frequencies;
     private int processedWords;
 
-
     public WordCounterImpl(final int maxNumberOfElements) {
         super(maxNumberOfElements);
         this.frequencies = new HashMap<>();
@@ -19,7 +18,7 @@ public class WordCounterImpl extends BoundedPipe<Update> implements WordCounter 
     @Override
     @SuppressWarnings("Convert2MethodRef")
     protected void doEnqueue(final Update element) {
-        element.getFrequencies().forEach((k, v) -> this.frequencies.merge(k, v, (o,n) -> o+n));
+        element.getFrequencies().forEach((k, v) -> this.frequencies.merge(k, v, (o, n) -> o + n));
         this.processedWords += element.getProcessedWords();
         super.doEnqueue(new UpdateImpl(this.frequencies,this.processedWords));
     }

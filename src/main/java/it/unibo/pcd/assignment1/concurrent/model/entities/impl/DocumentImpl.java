@@ -16,7 +16,7 @@ public class DocumentImpl implements Document {
      * @param internalDocument the wrapped document object as defined by the Apache PDFBox library
      */
     public DocumentImpl(final PDDocument internalDocument) {
-        this.internalDocument = internalDocument;
+        this.internalDocument = Objects.requireNonNull(internalDocument);
     }
 
     /**
@@ -38,7 +38,7 @@ public class DocumentImpl implements Document {
         if (o == null || this.getClass() != o.getClass()) {
             return false;
         }
-        return internalDocument.equals(((DocumentImpl) o).internalDocument);
+        return this.internalDocument.equals(((DocumentImpl) o).internalDocument);
     }
 
     /**

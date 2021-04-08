@@ -11,9 +11,7 @@ abstract class AbstractFilterTask<I, O> extends AbstractTask {
     private final Pipe<I> inputPipe;
     private final Pipe<O> outputPipe;
 
-    protected AbstractFilterTask(final TaskCounter taskCounter,
-                                 final Pipe<I> inputPipe,
-                                 final Pipe<O> outputPipe) {
+    protected AbstractFilterTask(final TaskCounter taskCounter, final Pipe<I> inputPipe, final Pipe<O> outputPipe) {
         super(taskCounter);
         this.inputPipe = Objects.requireNonNull(inputPipe);
         this.outputPipe = Objects.requireNonNull(outputPipe);
@@ -24,8 +22,7 @@ abstract class AbstractFilterTask<I, O> extends AbstractTask {
     protected boolean doRun(){
         final Optional<I> input = this.inputPipe.dequeue();
         if (input.isPresent()) {
-            this.transform(input.get())
-                .forEach(o -> this.outputPipe.enqueue(o));
+            this.transform(input.get()).forEach(o -> this.outputPipe.enqueue(o));
         }
         return input.isPresent();
     }

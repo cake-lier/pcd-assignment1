@@ -24,13 +24,15 @@ public class TaskListFactory {
     private final int documentNumber;
     private final int wordsForPage;
     private final int pagesForDocument;
+    private final String word;
 
     public TaskListFactory(final int documentNumber,
                            final int pagesForDocument,
                            final int wordsForPage,
                            final int pipesSize,
                            final Pipe<Update> updates,
-                           final TaskCounter taskCounter) {
+                           final TaskCounter taskCounter,
+                           final String word) {
         this.paths = new BoundedPipe<>(pipesSize);
         this.documents = new BoundedPipe<>(pipesSize);
         this.pages = new BoundedPipe<>(pipesSize);
@@ -39,26 +41,30 @@ public class TaskListFactory {
         this.wordsForPage = wordsForPage;
         this.documentNumber = documentNumber;
         this.pagesForDocument = pagesForDocument;
+        this.word = Objects.requireNonNull(word);
     }
 
     @SuppressWarnings("Convert2MethodRef")
     public List<Task> createForFilterAgent(final FilterTaskTypes firstTaskType) {
         final List<Task> agents = new ArrayList<>();
-        Arrays.<Supplier<Task>>asList(() -> new PathFilterTask(this.paths, this.documents,this.taskCounter, pagesForDocument, wordsForPage),
-                                () -> new DocumentFilterTask(this.documents, this.pages, this.taskCounter),
-                                () -> new PageFilterTask(this.pages,
-                                                         this.updates,
-                                                         this.taskCounter))
-                     .subList(firstTaskType.ordinal(), FilterTaskTypes.values().length)
-                     .stream()
-                     .map(e->e.get())
-                     .forEach(e->agents.add(e));
+        Arrays.<Supplier<Task>>asList(() -> new PathFilterTask(this.paths,
+                                                  this.documents,
+                                                  this.taskCounter,
+                                                  this.pagesForDocument,
+                                                  this.wordsForPage,
+                                                  this.word),
+                         () -> new DocumentFilterTask(this.documents, this.pages, this.taskCounter),
+                         () -> new PageFilterTask(this.pages, this.updates, this.taskCounter))
+              .subList(firstTaskType.ordinal(), FilterTaskTypes.values().length)
+              .stream()
+              .map(e -> e.get())
+              .forEach(e -> agents.add(e));
         return agents;
     }
 
     public List<Task> createForGeneratorAgent() {
         final List<Task> taskList = new ArrayList<>(this.createForFilterAgent(FilterTaskTypes.PATH));
-        taskList.add(0, new PathGeneratorTask(this.documentNumber,this.paths,this.taskCounter));
+        taskList.add(0, new PathGeneratorTask(this.documentNumber, this.paths, this.taskCounter));
         return taskList;
     }
 }

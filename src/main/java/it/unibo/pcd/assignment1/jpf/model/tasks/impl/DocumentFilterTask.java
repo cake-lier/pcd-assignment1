@@ -9,10 +9,7 @@ import java.util.List;
 
 public class DocumentFilterTask extends AbstractFilterTask<Document, Page> {
 
-    public DocumentFilterTask(
-            final Pipe<Document> documentPipe,
-            final Pipe<Page> pagePipe,
-            final TaskCounter taskCounter) {
+    public DocumentFilterTask(final Pipe<Document> documentPipe, final Pipe<Page> pagePipe, final TaskCounter taskCounter) {
         super(taskCounter, documentPipe, pagePipe);
     }
 

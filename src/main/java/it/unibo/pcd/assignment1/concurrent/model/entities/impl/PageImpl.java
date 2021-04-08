@@ -14,7 +14,7 @@ public class PageImpl implements Page {
      * @param text the textual content of this page
      */
     public PageImpl(final String text) {
-        this.text = text;
+        this.text = Objects.requireNonNull(text);
     }
 
     /**
